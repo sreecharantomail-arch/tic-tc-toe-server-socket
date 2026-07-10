@@ -1,0 +1,60 @@
+/* =============================================================================
+   LOADING SCREEN
+   ============================================================================= */
+
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  transition: opacity 0.5s;
+}
+
+#loading-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loading-logo {
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  background: linear-gradient(90deg, var(--x), var(--o), var(--win));
+  background-size: 200%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 2s linear infinite;
+}
+
+@keyframes shimmer {
+  from { background-position: 0% 50%; }
+  to   { background-position: 200% 50%; }
+}
+
+.loading-bar-track {
+  width: 200px;
+  height: 4px;
+  background: var(--bd);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.loading-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--x), var(--o));
+  border-radius: 2px;
+  transition: width 0.1s;
+}
+
+.loading-status {
+  font-size: 0.75rem;
+  color: var(--text3);
+  letter-spacing: 0.15em;
+}

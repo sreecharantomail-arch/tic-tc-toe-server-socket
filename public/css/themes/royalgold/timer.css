@@ -1,0 +1,50 @@
+/* ==========================================================
+   PREMIUM TIMER
+   ========================================================== */
+
+body.theme-royalgold .timer-wrap{
+    filter: drop-shadow(0 0 10px rgba(255,215,0,.20));
+}
+
+body.theme-royalgold .timer-track{
+    fill:none;
+    stroke:rgba(255,215,0,.18);
+    stroke-width:3.5;
+}
+
+body.theme-royalgold .timer-arc{
+    stroke:var(--rg-gold-3);
+    stroke-width:3.5;
+    stroke-linecap:round;
+
+    filter:drop-shadow(0 0 8px rgba(255,215,0,.45));
+}
+
+body.theme-royalgold .timer-number{
+    color:var(--rg-gold-2);
+    font-weight:800;
+
+    text-shadow:
+        0 0 6px rgba(255,215,0,.30),
+        0 0 12px rgba(255,215,0,.18);
+}
+
+body.theme-royalgold .timer-arc.warning{
+    stroke:#FFC94D;
+}
+
+body.theme-royalgold .timer-arc.critical{
+    stroke:#FF9F1C;
+    animation:rgTimerPulse .8s infinite;
+}
+
+@keyframes rgTimerPulse{
+
+    0%,100%{
+        filter:drop-shadow(0 0 8px rgba(255,215,0,.35));
+    }
+
+    50%{
+        filter:drop-shadow(0 0 18px rgba(255,215,0,.70));
+    }
+}

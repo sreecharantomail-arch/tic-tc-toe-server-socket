@@ -1,0 +1,315 @@
+/* =============================================================================
+   GAME SCREEN
+   ============================================================================= */
+
+/* ----- Score bar ----- */
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 6px;
+}
+
+.player-card {
+  flex: 1;
+  background: var(--card);
+  border-radius: 12px;
+  border: 1.5px solid var(--bd);
+  padding: 8px 10px;
+  text-align: center;
+  transition: border-color 0.3s,
+            box-shadow 0.3s,
+            transform 0.2s;
+  min-width: 0;
+  position: relative;
+}
+
+.player-card.ax { border-color: var(--x); box-shadow: 0 0 16px var(--glow-x); }
+.player-card.ao { border-color: var(--o); box-shadow: 0 0 16px var(--glow-o); }
+
+.player-card .player-avatar { font-size: 1.2rem; line-height: 1; }
+.player-card .player-name   { font-size: 0.65rem; color: var(--text3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 1px 0; }
+.player-card .player-score  { font-size: 1.3rem; font-weight: 800; }
+.player-card.xc .player-score { color: var(--x); }
+.player-card.oc .player-score { color: var(--o); }
+
+.vs-label { font-size: 0.7rem; color: var(--text3); font-weight: 700; flex-shrink: 0; }
+
+/* ----- Timer ----- */
+
+.timer-wrap { position: relative; width: 48px; height: 48px; flex-shrink: 0; }
+.timer-wrap svg { transform: rotate(-90deg); }
+
+.timer-track {
+  fill: none;
+  stroke: var(--bd);
+  stroke-width: 3.5;
+}
+
+.timer-arc {
+  fill: none;
+  stroke: var(--win);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-dasharray: 113;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.9s linear, stroke 0.4s;
+}
+.timer-arc.warning  { stroke: #ff7700; }
+.timer-arc.critical { stroke: var(--o); }
+
+.timer-number {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--win);
+}
+
+/* ----- Status bar ----- */
+
+.status-bar {
+  min-height: 28px;
+  text-align: center;
+  font-size: 0.85rem;
+  margin: 4px 0;
+}
+.sx  { color: var(--x); }
+.so  { color: var(--o); }
+.sw  { color: var(--win); font-weight: 800; animation: pulse 0.9s infinite alternate; }
+.sd  { color: var(--win); }
+
+@keyframes pulse { from { opacity: 0.5; } to { opacity: 1; } }
+
+/* ----- Board ----- */
+
+.board-wrap { position: relative; width: min(296px, 88vw); }
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+.cell {
+  aspect-ratio: 1;
+  background: var(--card);
+  border-radius: 13px;
+  border: 1.5px solid var(--bd);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: clamp(1.8rem, 8vw, 2.7rem);
+  font-weight: 900;
+  position: relative;
+  overflow: hidden;
+  transition:
+        transform .15s ease,
+        background .15s ease,
+        border-color .2s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+.cell.taken  { cursor: default; }
+.cell.off    { cursor: not-allowed; }
+.cell.xc     { color: var(--x); text-shadow: 0 0 18px var(--x); }
+.cell.oc     { color: var(--o); text-shadow: 0 0 18px var(--o); }
+.cell.wc {
+    animation: winBounce .5s ease;
+    will-change: transform;
+}
+
+@keyframes winBounce {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* Place animation — brief white flash */
+.cell.pop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.12);
+  animation: placeFlash 0.35s ease-out forwards;
+}
+
+@keyframes placeFlash {
+  from { opacity: 1; }
+  to   { opacity: 0; transform: scale(1.5); }
+}
+
+/* SVG win line drawn over the board */
+#win-line-svg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+#wline {
+    stroke: var(--win);
+    stroke-width: 8;
+    stroke-linecap: round;
+    fill: none;
+    filter: drop-shadow(0 0 10px var(--win));
+}
+
+/* ----- Emoji reactions ----- */
+
+.emoji-bar {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin: 2px 0;
+}
+
+.emoji-btn {
+  background: var(--card);
+  border: 1.5px solid var(--bd);
+  border-radius: 10px;
+  padding: 5px 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition:
+    transform .15s,
+    border-color .15s,
+    background .15s;
+}
+.emoji-btn:hover { transform: scale(1.25); border-color: var(--x); }
+
+.emoji-floater {
+  position: fixed;
+  font-size: 1.8rem;
+  pointer-events: none;
+  animation: floatUp 1.5s ease-out forwards;
+  will-change: transform, opacity;
+  z-index: 9998;
+}
+@keyframes floatUp {
+  0%   { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-120px) scale(1.4); }
+}
+
+/* ----- Chat ----- */
+
+.chat-box {
+  width: 100%;
+  background: var(--card);
+  border: 1.5px solid var(--bd);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.chat-messages {
+  height: 80px;
+  overflow-y: auto;
+  padding: 7px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--bd) transparent;
+}
+.chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: var(--bd);
+    border-radius: 20px;
+}
+
+.msg { font-size: 0.72rem; line-height: 1.4; }
+.msg .sn { font-weight: 700; margin-right: 3px; }
+.msg.me .sn   { color: var(--x); }
+.msg.them .sn { color: var(--o); }
+.msg.sys      { color: var(--text3); font-style: italic; }
+
+.chat-input-row { display: flex; border-top: 1px solid var(--bd); }
+
+.chat-input-row input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-size: 0.78rem;
+  padding: 8px 10px;
+  font-family: inherit;
+  margin: 0;
+}
+.chat-input-row input::placeholder { color: var(--text3); }
+
+.chat-input-row button {
+  background: transparent;
+  border: none;
+  border-left: 1px solid var(--bd);
+  color: var(--text3);
+  padding: 0 12px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: color 0.2s;
+  font-family: inherit;
+}
+.chat-input-row button:hover { color: var(--text); }
+
+/* ----- In-game session leaderboard ----- */
+
+.session-lb { width: 100%; }
+
+.session-lb-header {
+  display: flex;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--bd);
+  margin-bottom: 2px;
+}
+.session-lb-header span { font-size: 0.62rem; color: var(--text3); letter-spacing: 0.1em; }
+
+.session-lb-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--card2);
+}
+.session-lb-rank  { font-size: 0.7rem;  color: var(--text3); width: 16px; text-align: center; }
+.session-lb-name  { flex: 1; font-size: 0.78rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.session-lb-wins  { font-size: 0.78rem; color: var(--win); font-weight: 700; min-width: 24px; text-align: right; }
+.session-lb-draws { font-size: 0.7rem;  color: var(--text3); min-width: 20px; text-align: right; }
+
+/* ----- Game action row ----- */
+
+.action-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.mode-pill {
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--bd);
+  color: var(--text3);
+  text-transform: uppercase;
+  text-align: center;
+}

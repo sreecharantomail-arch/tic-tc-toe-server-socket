@@ -1,0 +1,50 @@
+/* =============================================================================
+   LEADERBOARD SCREEN
+   ============================================================================= */
+
+.global-lb-head {
+  display: grid;
+  grid-template-columns: 28px 1fr 44px 44px 44px;
+  gap: 6px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--bd);
+  margin-bottom: 4px;
+}
+.global-lb-head span {
+  font-size: 0.6rem;
+  color: var(--text3);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: center;
+}
+.global-lb-head span:nth-child(2) { text-align: left; }
+
+.lb-row {
+  display: grid;
+  grid-template-columns: 28px 1fr 44px 44px 44px;
+  gap: 6px;
+  align-items: center;
+  padding: 7px 8px;
+  border-radius: 10px;
+  transition:
+    background .2s,
+    transform .2s;
+  margin-bottom: 2px;
+}
+.lb-row:hover {
+    background: var(--card2);
+    transform: translateY(-1px);
+}
+
+.lb-row.gold   .lb-rank { color: #ffd700; }
+.lb-row.silver .lb-rank { color: #c0c0c0; }
+.lb-row.bronze .lb-rank { color: #cd7f32; }
+
+.lb-rank  { font-size: 0.78rem; text-align: center; font-weight: 700; }
+.lb-name  { font-size: 0.82rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 5px; }
+.lb-av    { font-size: 1rem; }
+.lb-stat  { font-size: 0.78rem; text-align: center; }
+.lb-stat.wins  { color: var(--win); font-weight: 700; }
+.lb-stat.draws { color: var(--text3); }
+.lb-stat.xp    { color: var(--x); }
+.lb-empty { text-align: center; color: var(--text3); font-size: 0.8rem; padding: 20px 0; }

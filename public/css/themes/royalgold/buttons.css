@@ -1,0 +1,94 @@
+@import "variables.css";
+@import "buttons.css";
+@import "player-cards.css";
+@import "board.css";
+@import "timer.css";
+@import "chat.css";
+@import "animations.css";
+@import "particles.css";
+
+
+/* ==========================================================
+   ROYAL GOLD DESIGN TOKENS
+   ========================================================== */
+
+body.theme-royalgold{
+
+    /* Primary Gold */
+    --rg-gold-1:#FFF6C7;
+    --rg-gold-2:#FFE27A;
+    --rg-gold-3:#FFD700;
+    --rg-gold-4:#D4AF37;
+    --rg-gold-5:#8B6914;
+
+    /* Black */
+    --rg-black-1:#050505;
+    --rg-black-2:#0A0A0A;
+    --rg-black-3:#121212;
+    --rg-black-4:#1C1C1C;
+
+    /* Effects */
+    --rg-border:rgba(255,215,0,.45);
+    --rg-glow:rgba(255,215,0,.28);
+    --rg-light:rgba(255,255,255,.10);
+
+    /* Shadows */
+    --rg-shadow-small:0 0 12px rgba(255,215,0,.12);
+    --rg-shadow-big:0 0 45px rgba(255,215,0,.22);
+}
+
+/* ==========================================================
+   LUXURY BUTTON SYSTEM
+   ========================================================== */
+
+body.theme-royalgold .btn,
+body.theme-royalgold .btn-ghost {
+
+    position: relative;
+    overflow: hidden;
+
+    border: 2px solid var(--rg-gold-4);
+    border-radius: 18px;
+
+    background: linear-gradient(
+        180deg,
+        var(--rg-black-4) 0%,
+        var(--rg-black-3) 45%,
+        var(--rg-black-2) 100%
+    );
+
+    color: var(--rg-gold-2);
+
+    font-weight: 700;
+    letter-spacing: .05em;
+
+    box-shadow:
+        inset 0 1px rgba(255,255,255,.08),
+        inset 0 -2px rgba(0,0,0,.45),
+        var(--rg-shadow-small);
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease;
+}
+
+body.theme-royalgold .btn:hover,
+body.theme-royalgold .btn-ghost:hover {
+
+    transform: translateY(-3px);
+
+    border-color: var(--rg-gold-2);
+
+    box-shadow:
+        inset 0 1px rgba(255,255,255,.12),
+        0 0 20px rgba(255,215,0,.18),
+        var(--rg-shadow-big);
+}
+
+body.theme-royalgold .btn:active,
+body.theme-royalgold .btn-ghost:active {
+
+    transform: scale(.97);
+
+}

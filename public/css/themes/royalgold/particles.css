@@ -1,0 +1,155 @@
+/* ==========================================================
+   ROYAL GOLD COIN RAIN
+   ========================================================== */
+
+.rg-coin{
+
+    position: fixed;
+
+    top: -60px;
+
+    font-size: 28px;
+
+    pointer-events: none;
+
+    z-index: 99999;
+
+    filter:
+        drop-shadow(0 0 8px #FFD700)
+        drop-shadow(0 0 18px #FFC800);
+
+    animation: rgCoinRain linear forwards;
+
+}
+
+@keyframes rgCoinRain{
+
+    0%{
+
+        transform:
+            translateY(0)
+            rotate(0deg)
+            scale(.7);
+
+        opacity:0;
+
+    }
+
+    10%{
+
+        opacity:1;
+
+    }
+
+    100%{
+
+        transform:
+            translateY(calc(100vh + 80px))
+            rotate(720deg)
+            scale(1);
+
+        opacity:0;
+
+    }
+
+}
+
+
+
+.rg-trail{
+
+    position:fixed;
+
+    width:12px;
+    height:12px;
+
+    border-radius:50%;
+
+    background:radial-gradient(circle,#FFF8A8,#FFD700,#FFB800);
+
+    pointer-events:none;
+
+    z-index:99999;
+
+    box-shadow:
+        0 0 10px #FFD700,
+        0 0 25px #FFD700;
+
+    animation:rgTrail .7s ease-out forwards;
+
+}
+
+@keyframes rgTrail{
+
+    from{
+
+        transform:scale(.3);
+
+        opacity:1;
+
+    }
+
+    to{
+
+        transform:scale(2);
+
+        opacity:0;
+
+    }
+
+}
+
+
+/* ==========================================================
+   GOLD LIGHT SWEEP
+   ========================================================== */
+
+.rg-line-sweep{
+
+    position:fixed;
+
+    width:24px;
+    height:24px;
+
+    border-radius:50%;
+
+    pointer-events:none;
+
+    z-index:99999;
+
+    background:radial-gradient(circle,
+        #FFF9B0 0%,
+        #FFD700 35%,
+        rgba(255,215,0,.35) 70%,
+        transparent 100%);
+
+    transform:translate(-50%,-50%);
+
+    box-shadow:
+        0 0 18px #FFD700,
+        0 0 35px #FFD700,
+        0 0 60px rgba(255,215,0,.6);
+
+    animation:rgSweepPulse .4s ease-in-out infinite;
+
+}
+
+@keyframes rgSweepPulse{
+
+    0%,100%{
+
+        transform:
+            translate(-50%,-50%)
+            scale(.8);
+
+    }
+
+    50%{
+
+        transform:
+            translate(-50%,-50%)
+            scale(1.3);
+
+    }
+
+}

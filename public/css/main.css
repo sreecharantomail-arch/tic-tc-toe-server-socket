@@ -1,0 +1,613 @@
+
+
+/* ==========================================================
+   FONTS
+   ========================================================== */
+
+@font-face {
+    font-family: "Cinzel";
+    src: url("../assets/fonts/cinzel/Cinzel-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Cinzel";
+    src: url("../assets/fonts/cinzel/Cinzel-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* =============================================================================
+   RESET & CSS CUSTOM PROPERTIES
+   ============================================================================= */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Core palette — dark theme (default) */
+  --x:       #00f5ff;
+  --o:       #ff2d78;
+  --win:     #ffe066;
+  --purple:  #9955ff;
+  --green:   #00cc66;
+
+  /* Surfaces */
+  --bg:      #0a0a1a;
+  --bg2:     #060612;
+  --card:    #111130;
+  --card2:   #0d0d28;
+  --bd:      #1e1e3a;
+
+  /* Text */
+  --text:    #ffffff;
+  --text2:   #aaaacc;
+  --text3:   #555577;
+
+  /* Glow helpers (used in box-shadows and radial backgrounds) */
+  --glow-x:  rgba(0, 245, 255, 0.25);
+  --glow-o:  rgba(255, 45, 120, 0.25);
+  --glow-y:  rgba(255, 224, 102, 0.25);
+  --glow-p:  rgba(153, 85, 255, 0.25);
+
+  /* Component tokens */
+  --xp-bar:  #00f5ff;
+  --coin:    #ffe066;
+
+  /* Shape tokens */
+  --radius-btn:  11px;
+  --radius-card: 16px;
+  --shadow: 0 15px 45px rgba(0,0,0,.55);
+
+  --font: 'Segoe UI', system-ui, sans-serif;
+  --font-luxury: "Cinzel", serif;
+}
+
+/* =============================================================================
+   GLOBAL LAYOUT
+   ============================================================================= */
+
+html, body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, var(--glow-x), transparent 35%),
+    radial-gradient(circle at bottom right, var(--glow-o), transparent 35%),
+    linear-gradient(135deg, var(--bg) 0%, var(--bg2) 50%, var(--bg) 100%);
+  background-size: 200% 200%;
+  animation: cyberBackground 12s ease infinite;
+  color: var(--text);
+  font-family: var(--font);
+  overflow-x: hidden;
+  transition: background .4s, color .4s;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  position: relative;
+}
+
+/* Particle canvas sits above everything via z-index */
+#particle-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+
+/* =============================================================================
+   HEADER
+   ============================================================================= */
+
+#game-header {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0 12px;
+  gap: 8px;
+}
+
+.header-brand {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-title {
+  font-size: 1.1rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  background: linear-gradient(90deg, var(--x), var(--o));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header-subtitle {
+  font-size: 0.55rem;
+  letter-spacing: 0.25em;
+  color: var(--text3);
+  text-transform: uppercase;
+}
+
+.header-nav {
+  display: flex;
+  gap: 6px;
+}
+
+.nav-btn {
+  background: var(--card);
+  border: 1.5px solid var(--bd);
+  border-radius: 9px;
+  color: var(--text2);
+  padding: 6px 9px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition:
+    background .18s,
+    color .18s,
+    border-color .18s,
+    transform .18s,
+    box-shadow .18s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-btn:hover,
+.nav-btn.active {
+  border-color: var(--x);
+  color: var(--x);
+  background: var(--glow-x);
+}
+
+/* =============================================================================
+   PLAYER HUD
+   ============================================================================= */
+
+#player-hud {
+  width: 100%;
+  max-width: 560px;
+  background: var(--card);
+  border: 1.5px solid var(--bd);
+  border-radius: var(--radius-card);
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hud-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--card2);
+  border: 2px solid var(--x);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.hud-avatar:hover { transform: scale(1.1); }
+
+.hud-info { flex: 1; min-width: 0; }
+
+.hud-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hud-level {
+  font-size: 0.62rem;
+  color: var(--text3);
+  letter-spacing: 0.1em;
+}
+
+.hud-xp-bar {
+  height: 4px;
+  background: var(--bd);
+  border-radius: 2px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.hud-xp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--xp-bar), var(--o));
+  border-radius: 2px;
+  transition: width 0.6s ease;
+}
+
+.hud-coins {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--coin);
+  background: var(--card2);
+  border: 1px solid #3a3a1a;
+  border-radius: 8px;
+  padding: 4px 8px;
+  flex-shrink: 0;
+}
+
+.hud-coins span { font-size: 0.9rem; }
+
+/* =============================================================================
+   SCREEN SYSTEM
+   ============================================================================= */
+
+.screen {
+  width: 100%;
+  max-width: 520px;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  animation: fadeIn 0.3s ease;
+}
+
+.screen.active { display: flex; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =============================================================================
+   PANELS & CARDS
+   ============================================================================= */
+
+.panel {
+  background: var(--card);
+  border: 1.5px solid var(--bd);
+  border-radius: var(--radius-card);
+  padding: 16px;
+  width: 100%;
+}
+
+.panel h2 {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--text3);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+/* =============================================================================
+   FORMS
+   ============================================================================= */
+
+input[type="text"] {
+  width: 100%;
+  background: var(--card2);
+  border: 1.5px solid var(--bd);
+  border-radius: 9px;
+  color: var(--text);
+  padding: 10px 13px;
+  font-size: 0.88rem;
+  outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 8px;
+  font-family: inherit;
+}
+
+input[type="text"]:focus    { border-color: var(--x); }
+input[type="text"]::placeholder { color: var(--text3); }
+
+/* =============================================================================
+   BUTTONS
+   ============================================================================= */
+
+.btn {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: var(--radius-btn);
+  border: none;
+  font-size: 0.83rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition:
+    background .18s,
+    color .18s,
+    border-color .18s,
+    transform .18s,
+    box-shadow .18s;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-family: inherit;
+}
+
+.btn + .btn { margin-top: 7px; }
+
+.btn-x {
+  background: #001f2a;
+  border: 1.5px solid var(--x);
+  color: var(--x);
+}
+.btn-x:hover {
+  background: var(--glow-x);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px var(--glow-x);
+}
+
+.btn-o {
+  background: #2a001a;
+  border: 1.5px solid var(--o);
+  color: var(--o);
+}
+.btn-o:hover {
+  background: var(--glow-o);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px var(--glow-o);
+}
+
+.btn-y {
+  background: #1a1400;
+  border: 1.5px solid var(--win);
+  color: var(--win);
+}
+.btn-y:hover {
+  background: var(--glow-y);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px var(--glow-y);
+}
+
+.btn-p {
+  background: #0d001a;
+  border: 1.5px solid var(--purple);
+  color: var(--purple);
+}
+.btn-p:hover {
+  background: var(--glow-p);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px var(--glow-p);
+}
+
+.btn-g {
+  background: #001a0a;
+  border: 1.5px solid var(--green);
+  color: var(--green);
+}
+.btn-g:hover { transform: translateY(-2px); }
+
+.btn-sm {
+  width: auto;
+  padding: 8px 14px;
+  font-size: 0.76rem;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1.5px solid var(--bd);
+  color: var(--text3);
+  border-radius: var(--radius-btn);
+  padding: 9px 20px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition:
+    background .2s,
+    color .2s,
+    border-color .2s,
+    transform .2s,
+    box-shadow .2s;
+  font-family: inherit;
+}
+.btn-ghost:hover {
+  border-color: var(--text2);
+  color: var(--text);
+}
+
+/* Divider with centred label */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+.divider span { color: var(--text3); font-size: 0.72rem; white-space: nowrap; }
+.divider::before,
+.divider::after { content: ''; flex: 1; height: 1px; background: var(--bd); }
+
+
+
+
+
+
+
+
+
+/* =============================================================================
+   BOTTOM NAVIGATION
+   ============================================================================= */
+
+#bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--card);
+  border-top: 1.5px solid var(--bd);
+  display: flex;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.bnav-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 4px;
+  cursor: pointer;
+  transition: color 0.2s;
+  border: none;
+  background: transparent;
+  color: var(--text3);
+  font-family: inherit;
+  gap: 2px;
+}
+.bnav-btn:hover,
+.bnav-btn.active { color: var(--x); }
+
+.bnav-icon  { font-size: 1.2rem; }
+.bnav-label { font-size: 0.55rem; letter-spacing: 0.08em; }
+
+/* =============================================================================
+   NOTIFICATION / OVERLAY UTILITIES
+   ============================================================================= */
+
+/* Floating "+50 XP" toast */
+.fade-out{
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity .3s ease, transform .3s ease;
+}
+.xp-notif {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--card);
+  border: 2px solid var(--x);
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--x);
+  pointer-events: none;
+  animation: xpPop 0.8s ease forwards;
+  z-index: 9995;
+  white-space: nowrap;
+}
+
+@keyframes xpPop {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.7); }
+  40%  { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+  70%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -60%) scale(0.9); }
+}
+
+/* ----- Inline error text (forms) ----- */
+.error-msg { font-size: 0.78rem; color: #ff5566; min-height: 16px; text-align: center; }
+
+/* ----- Section label above a content block ----- */
+.section-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  color: var(--text3);
+  text-transform: uppercase;
+  width: 100%;
+  margin-bottom: 6px;
+}
+
+/* ----- Tab strip (used on Leaderboard screen) ----- */
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  width: 100%;
+  background: var(--card2);
+  border-radius: 10px;
+  padding: 3px;
+}
+.av-cost {
+  font-size: 0.6rem;
+  margin-top: 4px;
+  color: var(--coin);
+  font-weight: 700;
+}
+.av-cost.owned  { color: var(--green); }
+.av-cost.active { color: var(--x); }
+
+.tab-btn {
+  flex: 1;
+  padding: 7px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text3);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition:
+    background .2s,
+    color .2s,
+    box-shadow .2s;
+  font-family: inherit;
+  font-weight: 600;
+}
+.tab-btn.active { background: var(--card); color: var(--text); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); }
+
+/* =============================================================================
+   SCROLLBAR
+   ============================================================================= */
+
+::-webkit-scrollbar       { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--bd); border-radius: 2px; }
+
+/* =============================================================================
+   CONNECTION STATUS BADGE
+   ============================================================================= */
+#conn-badge {
+  position: fixed;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.65rem;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  z-index: 9998;
+  pointer-events: none;
+  transition: opacity 0.4s;
+  opacity: 0;
+  white-space: nowrap;
+}
+#conn-badge.show       { opacity: 1; }
+#conn-badge.online     { background: #001a0a; border: 1px solid var(--green); color: var(--green); }
+#conn-badge.offline    { background: #1a0000; border: 1px solid var(--o);     color: var(--o); }
+#conn-badge.connecting { background: #1a1400; border: 1px solid var(--win);   color: var(--win); }
+
+/* Rematch row */
+.rematch-row { display: flex; gap: 8px; justify-content: center; width: 100%; margin-top: 4px; }
+#btnRematch  { display: none; }
+
+@keyframes cyberBackground {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}

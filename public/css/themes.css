@@ -1,0 +1,81 @@
+/* ----- Alternate Nexa clash themes (applied via body class) ----- */
+
+body.theme-light {
+  --bg: #f0f4ff;  --bg2: #e4eaff;  --card: #ffffff;  --card2: #f8faff;
+  --bd: #d0d8ff;  --text: #1a1a3a; --text2: #5555aa; --text3: #aaaacc;
+  --glow-x: rgba(0, 100, 255, 0.12);
+  --glow-o: rgba(255, 45, 120, 0.12);
+}
+
+body.theme-cyber {
+  --bg: #000800;  --bg2: #000500;  --card: #001200;  --card2: #000e00;
+  --bd: #00ff4422; --text: #00ff44; --text2: #00cc33; --text3: #005511;
+  --x: #00ff44;  --o: #ff6600;  --win: #ffff00;
+  --glow-x: rgba(0, 255, 68, 0.2);
+  --glow-o: rgba(255, 102, 0, 0.2);
+  --xp-bar: #00ff44;
+}
+
+body.theme-ocean {
+  --bg: #000d1a;  --bg2: #000810;  --card: #001830;  --card2: #001228;
+  --bd: #003366;  --text: #88ddff; --text2: #5599cc; --text3: #224466;
+  --x: #00aaff;  --o: #ff6688;  --win: #88ffdd;
+  --glow-x: rgba(0, 170, 255, 0.2);
+  --glow-o: rgba(255, 102, 136, 0.2);
+}
+
+body.theme-fire {
+  --bg: #1a0500;  --bg2: #0f0300;  --card: #2a0800;  --card2: #220600;
+  --bd: #551100;  --text: #ffcc88; --text2: #ff8844; --text3: #442200;
+  --x: #ff6600;  --o: #ff2244;  --win: #ffff00;
+  --glow-x: rgba(255, 102, 0, 0.2);
+  --glow-o: rgba(255, 34, 68, 0.2);
+}
+
+body.theme-mint {
+  --bg: #001a10;  --bg2: #00100a;  --card: #002818;  --card2: #001e12;
+  --bd: #004422;  --text: #88ffcc; --text2: #44cc88; --text3: #115533;
+  --x: #00ffaa;  --o: #ff44aa;  --win: #ffffaa;
+  --glow-x: rgba(0, 255, 170, 0.2);
+  --glow-o: rgba(255, 68, 170, 0.2);
+}
+
+/* ==========================================================
+   ROYAL GOLD THEME
+   ========================================================== */
+
+body.theme-royalgold {
+
+  /* Core Colors */
+  --x: #ffd700;
+  --o: #fff4c2;
+  --win: #ffea70;
+  --purple: #d4af37;
+  --green: #c8ff8c;
+
+  /* Background */
+  --bg: #0b0b0b;
+  --bg2: #050505;
+
+  /* Cards */
+  --card: linear-gradient(180deg,#191919,#0f0f0f);
+  --card2: #0b0b0b;
+
+  /* Borders */
+  --bd: #8a6a16;
+
+  /* Text */
+  --text: #fff8dc;
+  --text2: #d8c27a;
+  --text3: #8d7a43;
+
+  /* Glow */
+  --glow-x: rgba(255,215,0,.30);
+  --glow-o: rgba(255,244,194,.25);
+  --glow-y: rgba(255,234,112,.30);
+  --glow-p: rgba(212,175,55,.25);
+
+  /* Components */
+  --xp-bar: #ffd700;
+  --coin: #ffd700;
+}

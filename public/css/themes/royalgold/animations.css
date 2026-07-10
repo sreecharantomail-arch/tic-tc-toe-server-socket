@@ -1,0 +1,61 @@
+/* ==========================================================
+   ROYAL GOLD ANIMATIONS
+   ========================================================== */
+
+/* Gold breathing glow */
+@keyframes rgGoldGlow{
+
+    0%,100%{
+        box-shadow:
+            0 0 12px rgba(255,215,0,.12),
+            0 0 24px rgba(255,215,0,.08);
+    }
+
+    50%{
+        box-shadow:
+            0 0 22px rgba(255,215,0,.25),
+            0 0 42px rgba(255,215,0,.15);
+    }
+
+}
+
+/* Gold border pulse */
+
+@keyframes rgBorderPulse{
+
+    0%,100%{
+        border-color:var(--rg-gold-5);
+    }
+
+    50%{
+        border-color:var(--rg-gold-2);
+    }
+
+}
+
+/* Gold shine sweep */
+
+@keyframes rgShine{
+
+    from{
+        transform:translateX(-150%);
+    }
+
+    to{
+        transform:translateX(150%);
+    }
+
+}
+
+body.theme-royalgold .btn,
+body.theme-royalgold .btn-ghost{
+
+    animation:rgGoldGlow 3s ease-in-out infinite;
+}
+
+body.theme-royalgold .board-wrap{
+
+    animation:
+        rgGoldGlow 3s ease-in-out infinite,
+        rgBorderPulse 3s ease-in-out infinite;
+}

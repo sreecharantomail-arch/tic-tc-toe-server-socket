@@ -1,0 +1,161 @@
+/* ==========================================================
+   PREMIUM BOARD
+   ========================================================== */
+
+body.theme-royalgold .board-wrap{
+    position: relative;
+    padding: 14px;
+    border-radius: 24px;
+
+    background: linear-gradient(
+        180deg,
+        var(--rg-black-4),
+        var(--rg-black-3),
+        var(--rg-black-2)
+    );
+
+    border: 2px solid var(--rg-gold-5);
+
+    box-shadow:
+        inset 0 1px rgba(255,255,255,.05),
+        0 0 18px rgba(255,215,0,.12),
+        0 0 40px rgba(255,215,0,.08);
+}
+
+body.theme-royalgold .board{
+    gap:10px;
+}
+
+/* ==========================================================
+   PREMIUM CELLS
+   ========================================================== */
+
+body.theme-royalgold .cell{
+
+    position: relative;
+    overflow: hidden;
+
+    background: linear-gradient(
+        180deg,
+        var(--rg-black-4),
+        var(--rg-black-3)
+    );
+
+    border:2px solid var(--rg-gold-5);
+
+    border-radius:16px;
+
+    box-shadow:
+        inset 0 1px rgba(255,255,255,.05),
+        0 0 8px rgba(255,215,0,.06);
+
+    transition:
+        transform .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
+}
+
+body.theme-royalgold .cell:not(.taken):hover{
+
+    transform:translateY(-2px) scale(1.03);
+
+    border-color:var(--rg-gold-3);
+
+    box-shadow:
+        0 0 18px rgba(255,215,0,.22),
+        0 0 35px rgba(255,215,0,.10);
+}
+
+body.theme-royalgold .cell.xc{
+    color:var(--rg-gold-2);
+
+    text-shadow:
+        0 0 10px rgba(255,215,0,.45),
+        0 0 22px rgba(255,215,0,.25);
+}
+
+body.theme-royalgold .cell.oc{
+    color:#FFF6C7;
+
+    text-shadow:
+        0 0 10px rgba(255,215,0,.45),
+        0 0 22px rgba(255,215,0,.25);
+}
+
+/* Luxury shine effect */
+body.theme-royalgold .cell::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:inherit;
+
+    background:linear-gradient(
+        135deg,
+        transparent 20%,
+        rgba(255,255,255,.08) 50%,
+        transparent 80%
+    );
+
+    opacity:0;
+    transition:opacity .25s ease;
+    pointer-events:none;
+}
+
+body.theme-royalgold .cell:hover::before{
+    opacity:1;
+}
+
+body.theme-royalgold .board-wrap::after{
+    content:"";
+    position:absolute;
+    inset:-3px;
+    border-radius:26px;
+    pointer-events:none;
+
+    box-shadow:
+        0 0 18px rgba(255,215,0,.12),
+        0 0 45px rgba(255,215,0,.08);
+}
+
+/* ==========================================
+   ROYAL GOLD WIN LINE
+   ========================================== */
+
+body.theme-royalgold #wline{
+
+    stroke:url(#royalGoldGradient);
+
+    stroke-width:7;
+
+    stroke-linecap:round;
+
+    filter:
+        drop-shadow(0 0 10px #FFD700)
+        drop-shadow(0 0 22px #FFE55A)
+        drop-shadow(0 0 40px rgba(255,215,0,.65));
+
+    animation:
+        rgLineGlow 1.2s ease-in-out infinite;
+}
+
+@keyframes rgLineGlow{
+
+    0%,100%{
+
+        filter:
+            drop-shadow(0 0 8px #FFD700)
+            drop-shadow(0 0 18px #FFEA70);
+
+    }
+
+    50%{
+
+        filter:
+            drop-shadow(0 0 15px #FFD700)
+            drop-shadow(0 0 30px #FFF27A)
+            drop-shadow(0 0 50px #FFC800);
+
+    }
+
+}

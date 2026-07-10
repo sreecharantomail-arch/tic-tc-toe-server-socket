@@ -1,0 +1,27 @@
+/* ==========================================================
+   ROYAL GOLD DESIGN TOKENS
+   ========================================================== */
+
+body.theme-royalgold {
+    /* Primary Gold */
+    --rg-gold-1:#FFF6C7;
+    --rg-gold-2:#FFE27A;
+    --rg-gold-3:#FFD700;
+    --rg-gold-4:#D4AF37;
+    --rg-gold-5:#8B6914;
+
+    /* Black */
+    --rg-black-1:#050505;
+    --rg-black-2:#0A0A0A;
+    --rg-black-3:#121212;
+    --rg-black-4:#1C1C1C;
+
+    /* Effects */
+    --rg-border:rgba(255,215,0,.45);
+    --rg-glow:rgba(255,215,0,.28);
+    --rg-light:rgba(255,255,255,.10);
+
+    /* Shadows */
+    --rg-shadow-small:0 0 12px rgba(255,215,0,.12);
+    --rg-shadow-big:0 0 45px rgba(255,215,0,.22);
+}
