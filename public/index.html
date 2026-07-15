@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,723 +24,686 @@
   <link rel="stylesheet" href="css/shop.css">
   <link rel="stylesheet" href="css/settings.css">
   <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/responsive.css">
 </head>
-<body>
-<!-- Connection status badge (injected by JS) -->
-<div id="conn-badge"></div>
 
-<!-- ============================================================
+<body>
+  <!-- Connection status badge (injected by JS) -->
+  <div id="conn-badge"></div>
+
+  <!-- ============================================================
      PARTICLE CANVAS (fixed, above all UI, below modals)
      ============================================================ -->
-<canvas id="particle-canvas" aria-hidden="true"></canvas>
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
 
-<!-- ============================================================
+  <!-- ============================================================
      LOADING SCREEN
      ============================================================ -->
-<div id="loading-screen" role="status" aria-label="Loading game">
-  <div class="loading-logo">Nexa Clash</div>
-  <div class="loading-status" style="font-size:.75rem;color:var(--text3);letter-spacing:.15em;">ULTIMATE EDITION</div>
-  <div class="loading-bar-track">
-    <div class="loading-bar" id="loading-bar"></div>
+  <div id="loading-screen" role="status" aria-label="Loading game">
+    <div class="loading-logo">Nexa Clash</div>
+    <div class="loading-status" style="font-size:.75rem;color:var(--text3);letter-spacing:.15em;">ULTIMATE EDITION</div>
+    <div class="loading-bar-track">
+      <div class="loading-bar" id="loading-bar"></div>
+    </div>
+    <div class="loading-status" id="loading-msg">Initializing…</div>
   </div>
-  <div class="loading-status" id="loading-msg">Initializing…</div>
-</div>
 
-<!-- ============================================================
+  <!-- ============================================================
      DAILY REWARD MODAL
      ============================================================ -->
-<div class="daily-modal-overlay" id="daily-modal" style="display:none;" role="dialog" aria-modal="true" aria-label="Daily reward">
-  <div class="daily-modal-box">
-    <div style="font-size:.7rem;letter-spacing:.2em;color:var(--text3);margin-bottom:4px;">DAILY REWARD</div>
-    <div style="font-size:1.5rem;margin-bottom:4px;">🎁</div>
-    <div class="daily-streak-number" id="daily-streak-num">1</div>
-    <div style="font-size:.75rem;color:var(--text3);margin-bottom:4px;">DAY STREAK</div>
-    <div class="daily-coins-display">+<span id="daily-coins-amount">50</span> 🪙</div>
-    <div class="daily-week" id="daily-week-dots"></div>
-    <button type="button" class="btn btn-y" onclick="handleClaimDaily()">Claim Reward!</button>
+  <div class="daily-modal-overlay" id="daily-modal" style="display:none;" role="dialog" aria-modal="true"
+    aria-label="Daily reward">
+    <div class="daily-modal-box">
+      <div style="font-size:.7rem;letter-spacing:.2em;color:var(--text3);margin-bottom:4px;">DAILY REWARD</div>
+      <div style="font-size:1.5rem;margin-bottom:4px;">🎁</div>
+      <div class="daily-streak-number" id="daily-streak-num">1</div>
+      <div style="font-size:.75rem;color:var(--text3);margin-bottom:4px;">DAY STREAK</div>
+      <div class="daily-coins-display">+<span id="daily-coins-amount">50</span> 🪙</div>
+      <div class="daily-week" id="daily-week-dots"></div>
+      <button type="button" class="btn btn-y" onclick="handleClaimDaily()">Claim Reward!</button>
+    </div>
   </div>
-</div>
 
-<!-- Achievement / level-up popups are injected here by ui.js -->
-<div id="ach-popup-container" aria-live="polite"></div>
+  <!-- Achievement / level-up popups are injected here by ui.js -->
+  <div id="ach-popup-container" aria-live="polite"></div>
 
-<section class="screen" id="sAuth">
+  <section class="screen" id="sAuth">
 
-<div class="auth-card">
+    <div class="auth-card">
 
-    <!-- LOGIN VIEW -->
+      <!-- LOGIN VIEW -->
 
-    <div id="login-view">
+      <div id="login-view">
 
         <div class="auth-logo">
-            👑
+          👑
         </div>
 
         <h1>Nexa Clash</h1>
 
         <p class="auth-subtitle">
-            Welcome Back
+          Welcome Back
         </p>
 
-        <input
-            type="email"
-            id="login-email"
-            placeholder="Email">
+        <input type="email" id="login-email" placeholder="Email">
 
-        <input
-            type="password"
-            id="login-password"
-            placeholder="Password">
+        <input type="password" id="login-password" placeholder="Password">
 
-        <button
-            class="btn btn-y"
-            id="login-btn">
+        <button class="btn btn-y" id="login-btn">
 
-            Login
+          Login
 
         </button>
 
         <div class="auth-divider">
-            OR
+          OR
         </div>
 
-        <button
-    class="btn btn-y"
-    id="show-register"
-    type="button">
+        <button class="btn btn-y" id="show-register" type="button">
 
-    Create Account
+          Create Account
 
-</button>
+        </button>
 
-    </div>
+      </div>
 
-    <!-- REGISTER VIEW -->
+      <!-- REGISTER VIEW -->
 
-    <div id="register-view" style="display:none;">
+      <div id="register-view" style="display:none;">
 
         <div class="auth-logo">
-            👑
+          👑
         </div>
 
         <h1>Create Account</h1>
 
         <p class="auth-subtitle">
-            Join Nexa Clash
+          Join Nexa Clash
         </p>
 
-        <input
-            type="text"
-            id="register-username"
-            placeholder="Username">
+        <input type="text" id="register-username" placeholder="Username">
 
-        <input
-            type="email"
-            id="register-email"
-            placeholder="Email">
+        <input type="email" id="register-email" placeholder="Email">
 
-        <input
-            type="password"
-            id="register-password"
-            placeholder="Password">
+        <input type="password" id="register-password" placeholder="Password">
 
-        <input
-            type="password"
-            id="register-confirm-password"
-            placeholder="Confirm Password">
+        <input type="password" id="register-confirm-password" placeholder="Confirm Password">
 
-        <button
-            class="btn btn-y"
-            id="register-submit-btn"
-            type="button"
-            onclick="registerPlayer()">
+        <button class="btn btn-y" id="register-submit-btn" type="button" onclick="registerPlayer()">
 
-            Create Account
+          Create Account
 
         </button>
 
         <div class="auth-divider">
-            OR
+          OR
         </div>
 
-        <button
-            class="btn-ghost"
-            id="back-login">
+        <button class="btn-ghost" id="back-login">
 
-            Back to Login
+          Back to Login
 
         </button>
 
+      </div>
+
     </div>
 
-</div>
+  </section>
 
-</section>
-
-<!-- ============================================================
+  <!-- ============================================================
      MAIN APP
      ============================================================ -->
 
   <div id="app">
-  
-  <!-- Header -->
-  <header id="game-header">
-    <div class="header-brand">
-      <div class="header-title">Nexa Clash</div>
-      <div class="header-subtitle">Ultimate Edition</div>
+
+    <!-- Header -->
+    <header id="game-header">
+      <div class="header-brand">
+        <div class="header-title">Nexa Clash</div>
+        <div class="header-subtitle">Ultimate Edition</div>
+      </div>
+      <nav class="header-nav" aria-label="Quick navigation">
+        <button type="button" class="nav-btn" onclick="navTo('sSettings')" title="Settings"
+          aria-label="Settings">⚙️</button>
+        <button type="button" class="nav-btn" onclick="navTo('sShop')" title="Shop" aria-label="Theme Shop">🛒</button>
+      </nav>
+    </header>
+
+    <!-- Player HUD -->
+    <div id="player-hud" role="banner" aria-label="Player status">
+      <div class="hud-avatar" id="hud-avatar" onclick="navTo('sProfile')" title="View profile" role="button"
+        tabindex="0">🎮</div>
+      <div class="hud-info">
+        <div class="hud-name" id="hud-name">Guest</div>
+        <div class="hud-level" id="hud-level">LEVEL 1 · 0 XP</div>
+        <div class="hud-xp-bar">
+          <div class="hud-xp-fill" id="hud-xp-fill" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="hud-coins" aria-label="Coin balance"><span>🪙</span><span id="hud-coins">0</span></div>
     </div>
-    <nav class="header-nav" aria-label="Quick navigation">
-      <button type="button" class="nav-btn" onclick="navTo('sSettings')" title="Settings" aria-label="Settings">⚙️</button>
-      <button type="button" class="nav-btn" onclick="navTo('sShop')"    title="Shop"     aria-label="Theme Shop">🛒</button>
-    </nav>
-  </header>
 
-  <!-- Player HUD -->
-  <div id="player-hud" role="banner" aria-label="Player status">
-    <div class="hud-avatar" id="hud-avatar" onclick="navTo('sProfile')" title="View profile" role="button" tabindex="0">🎮</div>
-    <div class="hud-info">
-      <div class="hud-name"    id="hud-name">Guest</div>
-      <div class="hud-level"   id="hud-level">LEVEL 1 · 0 XP</div>
-      <div class="hud-xp-bar"><div class="hud-xp-fill" id="hud-xp-fill" style="width:0%"></div></div>
-    </div>
-    <div class="hud-coins" aria-label="Coin balance"><span>🪙</span><span id="hud-coins">0</span></div>
-  </div>
+    <!-- ── LOBBY ──────────────────────────────────────────────── -->
+    <main class="screen active" id="sLobby" aria-label="Game lobby">
 
-  <!-- ── LOBBY ──────────────────────────────────────────────── -->
-  <main class="screen active" id="sLobby" aria-label="Game lobby">
+      <!-- Shown only on first visit -->
+      <div id="name-setup-block" class="name-setup" style="display:none;">
+        <div class="panel">
+          <h2>Welcome — choose your name</h2>
+          <div class="name-edit-row">
+            <input type="text" id="uname" placeholder="Enter your name…" maxlength="16" autocomplete="off"
+              onkeydown="if(event.key==='Enter') saveName()" aria-label="Your player name">
+            <button type="button" class="name-save-btn" onclick="saveName()">Save</button>
+          </div>
+          <div id="nameErrMsg" class="error-msg"></div>
+        </div>
+      </div>
 
-    <!-- Shown only on first visit -->
-    <div id="name-setup-block" class="name-setup" style="display:none;">
+      <!-- Shown once the player has a name -->
+      <div id="welcome-back-block" style="display:none;">
+        <div class="welcome-card">
+          <div class="welcome-avatar" id="lobby-av">🎮</div>
+          <div class="welcome-info">
+            <div class="welcome-label">Welcome back</div>
+            <div class="welcome-name" id="lobby-name">Player</div>
+            <div class="welcome-sub" id="lobby-sub">Level 1 · 0 XP</div>
+          </div>
+          <button type="button" class="edit-name-btn" onclick="showNameEditRow()" title="Edit name"
+            aria-label="Edit name">✏️ Edit</button>
+        </div>
+        <div id="name-inline-edit" style="display:none;margin-top:8px;">
+          <div class="name-edit-row">
+            <input type="text" id="uname-edit" placeholder="New name…" maxlength="16" autocomplete="off"
+              onkeydown="if(event.key==='Enter') saveNameFromEditRow(); if(event.key==='Escape') cancelNameEditRow();"
+              aria-label="New player name">
+            <button type="button" class="name-save-btn" onclick="saveNameFromEditRow()">Save</button>
+          </div>
+          <div style="text-align:right;margin-top:4px;">
+            <button type="button" class="btn-ghost" onclick="cancelNameEditRow()">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mode selection grid -->
+      <div class="mode-grid" id="mode-grid" style="display:none;" role="group" aria-label="Select game mode">
+        <div class="mode-card mc-x" onclick="pickMode('2p')" role="button" tabindex="0"
+          aria-label="2 Player local game">
+          <div class="icon">👥</div>
+          <div class="label" style="color:var(--x)">2 Players</div>
+          <div class="desc">Local offline</div>
+        </div>
+        <div class="mode-card mc-o" onclick="pickMode('ai')" role="button" tabindex="0" aria-label="Play versus AI">
+          <div class="icon">🤖</div>
+          <div class="label" style="color:var(--o)">vs AI</div>
+          <div class="desc">Challenge the bot</div>
+        </div>
+        <div class="mode-card mc-y" onclick="pickMode('room')" role="button" tabindex="0"
+          aria-label="Create a private room">
+          <div class="icon">🏠</div>
+          <div class="label" style="color:var(--win)">Private Room</div>
+          <div class="desc">Invite a friend</div>
+        </div>
+        <div class="mode-card mc-p" onclick="pickMode('random')" role="button" tabindex="0"
+          aria-label="Random matchmaking">
+          <div class="icon">🌐</div>
+          <div class="label" style="color:var(--purple)">Quick Match</div>
+          <div class="desc">Play a stranger</div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ── AI DIFFICULTY ──────────────────────────────────────── -->
+    <section class="screen" id="sAI" aria-label="Choose AI difficulty">
       <div class="panel">
-        <h2>Welcome — choose your name</h2>
-        <div class="name-edit-row">
-          <input
-            type="text"
-            id="uname"
-            placeholder="Enter your name…"
-            maxlength="16"
-            autocomplete="off"
-            onkeydown="if(event.key==='Enter') saveName()"
-            aria-label="Your player name"
-          >
-          <button type="button" class="name-save-btn" onclick="saveName()">Save</button>
+        <h2>Choose Difficulty</h2>
+        <div class="diff-row" role="group" aria-label="Difficulty options">
+          <button type="button" class="diff-btn sel-easy" data-d="easy" onclick="selectDifficulty(this)">🌱
+            Easy</button>
+          <button type="button" class="diff-btn" data-d="medium" onclick="selectDifficulty(this)">⚡ Medium</button>
+          <button type="button" class="diff-btn" data-d="hard" onclick="selectDifficulty(this)">💀 Hard</button>
         </div>
-        <div id="nameErrMsg" class="error-msg"></div>
+        <button type="button" class="btn btn-o" style="margin-top:12px;" onclick="startAiGame()">⚔️ Start Game</button>
       </div>
-    </div>
+      <button type="button" class="btn-ghost" onclick="showScreen('sLobby')">← Back</button>
+    </section>
 
-    <!-- Shown once the player has a name -->
-    <div id="welcome-back-block" style="display:none;">
-      <div class="welcome-card">
-        <div class="welcome-avatar" id="lobby-av">🎮</div>
-        <div class="welcome-info">
-          <div class="welcome-label">Welcome back</div>
-          <div class="welcome-name" id="lobby-name">Player</div>
-          <div class="welcome-sub"  id="lobby-sub">Level 1 · 0 XP</div>
-        </div>
-        <button type="button" class="edit-name-btn" onclick="showNameEditRow()" title="Edit name" aria-label="Edit name">✏️ Edit</button>
+    <!-- ── PRIVATE ROOM SETUP ─────────────────────────────────── -->
+    <section class="screen" id="sRoom" aria-label="Private room setup">
+      <div class="panel">
+        <h2>Create a Private Room</h2>
+        <button type="button" class="btn btn-y" onclick="createPrivateRoom()">🏠 Generate Room Code</button>
       </div>
-      <div id="name-inline-edit" style="display:none;margin-top:8px;">
-        <div class="name-edit-row">
-          <input
-            type="text"
-            id="uname-edit"
-            placeholder="New name…"
-            maxlength="16"
-            autocomplete="off"
-            onkeydown="if(event.key==='Enter') saveNameFromEditRow(); if(event.key==='Escape') cancelNameEditRow();"
-            aria-label="New player name"
-          >
-          <button type="button" class="name-save-btn" onclick="saveNameFromEditRow()">Save</button>
-        </div>
-        <div style="text-align:right;margin-top:4px;">
-          <button type="button" class="btn-ghost" onclick="cancelNameEditRow()">Cancel</button>
+      <div class="divider"><span>OR JOIN</span></div>
+      <div class="panel">
+        <h2>Join with a Code</h2>
+        <div style="display:flex;gap:8px;">
+          <input type="text" id="joinCode" placeholder="e.g. ABC123" maxlength="6"
+            style="text-transform:uppercase;letter-spacing:.15em;margin:0;" aria-label="Room code">
+          <button type="button" class="btn btn-o btn-sm" onclick="joinPrivateRoom()">Join</button>
         </div>
       </div>
-    </div>
+      <div id="roomErrMsg" class="error-msg"></div>
+      <button type="button" class="btn-ghost" onclick="showScreen('sLobby')">← Back</button>
+    </section>
 
-    <!-- Mode selection grid -->
-    <div class="mode-grid" id="mode-grid" style="display:none;" role="group" aria-label="Select game mode">
-      <div class="mode-card mc-x" onclick="pickMode('2p')" role="button" tabindex="0" aria-label="2 Player local game">
-        <div class="icon">👥</div>
-        <div class="label" style="color:var(--x)">2 Players</div>
-        <div class="desc">Local offline</div>
+    <!-- ── WAITING FOR OPPONENT ───────────────────────────────── -->
+    <section class="screen" id="sWaiting" aria-label="Waiting for opponent" aria-live="polite">
+      <div class="panel" style="text-align:center;">
+        <h2>Private Room</h2>
+        <div class="room-code-box">
+          <button type="button" class="copy-btn" onclick="copyRoomCode()" aria-label="Copy room code">Copy</button>
+          <div style="font-size:.7rem;color:var(--text3);letter-spacing:.1em;margin-bottom:3px;">ROOM CODE</div>
+          <div class="room-code" id="dispCode" aria-label="Room code">——————</div>
+        </div>
+        <p style="font-size:.75rem;color:var(--text3);margin:8px 0;">Share this code with your friend</p>
+        <span class="badge badge-wait">Waiting for opponent<span class="dots" aria-hidden="true"></span></span>
       </div>
-      <div class="mode-card mc-o" onclick="pickMode('ai')" role="button" tabindex="0" aria-label="Play versus AI">
-        <div class="icon">🤖</div>
-        <div class="label" style="color:var(--o)">vs AI</div>
-        <div class="desc">Challenge the bot</div>
-      </div>
-      <div class="mode-card mc-y" onclick="pickMode('room')" role="button" tabindex="0" aria-label="Create a private room">
-        <div class="icon">🏠</div>
-        <div class="label" style="color:var(--win)">Private Room</div>
-        <div class="desc">Invite a friend</div>
-      </div>
-      <div class="mode-card mc-p" onclick="pickMode('random')" role="button" tabindex="0" aria-label="Random matchmaking">
-        <div class="icon">🌐</div>
-        <div class="label" style="color:var(--purple)">Quick Match</div>
-        <div class="desc">Play a stranger</div>
-      </div>
-    </div>
-  </main>
+      <button type="button" class="btn-ghost" onclick="cancelWaiting()">Cancel</button>
+    </section>
 
-  <!-- ── AI DIFFICULTY ──────────────────────────────────────── -->
-  <section class="screen" id="sAI" aria-label="Choose AI difficulty">
-    <div class="panel">
-      <h2>Choose Difficulty</h2>
-      <div class="diff-row" role="group" aria-label="Difficulty options">
-        <button type="button" class="diff-btn sel-easy" data-d="easy"   onclick="selectDifficulty(this)">🌱 Easy</button>
-        <button type="button" class="diff-btn"          data-d="medium" onclick="selectDifficulty(this)">⚡ Medium</button>
-        <button type="button" class="diff-btn"          data-d="hard"   onclick="selectDifficulty(this)">💀 Hard</button>
+    <!-- ── MATCHMAKING ────────────────────────────────────────── -->
+    <section class="screen" id="sMM" aria-label="Finding a match" aria-live="polite">
+      <div class="panel" style="text-align:center;">
+        <h2>Finding a Match</h2>
+        <div class="matchmaking-spinner" aria-hidden="true"></div>
+        <p style="font-size:.78rem;color:var(--text3);margin-top:8px;">Searching for an opponent<span class="dots"
+            aria-hidden="true"></span></p>
       </div>
-      <button type="button" class="btn btn-o" style="margin-top:12px;" onclick="startAiGame()">⚔️ Start Game</button>
-    </div>
-    <button type="button" class="btn-ghost" onclick="showScreen('sLobby')">← Back</button>
-  </section>
+      <button type="button" class="btn-ghost" onclick="cancelMatchmaking()">Cancel</button>
+    </section>
 
-  <!-- ── PRIVATE ROOM SETUP ─────────────────────────────────── -->
-  <section class="screen" id="sRoom" aria-label="Private room setup">
-    <div class="panel">
-      <h2>Create a Private Room</h2>
-      <button type="button" class="btn btn-y" onclick="createPrivateRoom()">🏠 Generate Room Code</button>
-    </div>
-    <div class="divider"><span>OR JOIN</span></div>
-    <div class="panel">
-      <h2>Join with a Code</h2>
-      <div style="display:flex;gap:8px;">
-        <input
-          type="text"
-          id="joinCode"
-          placeholder="e.g. ABC123"
-          maxlength="6"
-          style="text-transform:uppercase;letter-spacing:.15em;margin:0;"
-          aria-label="Room code"
-        >
-        <button type="button" class="btn btn-o btn-sm" onclick="joinPrivateRoom()">Join</button>
+    <!-- ── GAME ───────────────────────────────────────────────── -->
+    <section class="screen" id="sGame" aria-label="Game board">
+
+      <!-- Score bar -->
+      <div class="top-bar" role="group" aria-label="Scores">
+        <div class="player-card xc" id="cX">
+          <div class="player-avatar" id="avX">🎮</div>
+          <div class="player-name" id="nX">X</div>
+          <div class="player-score" id="scX">0</div>
+        </div>
+        <span class="vs-label" aria-hidden="true">VS</span>
+        <div class="timer-wrap" role="timer" aria-label="Turn timer">
+          <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true">
+            <circle class="timer-track" cx="24" cy="24" r="20" />
+            <circle class="timer-arc" id="tarc" cx="24" cy="24" r="20" />
+          </svg>
+          <div class="timer-number" id="tnum">15</div>
+        </div>
+        <span class="vs-label" aria-hidden="true">VS</span>
+        <div class="player-card oc" id="cO">
+          <div class="player-avatar" id="avO">🤖</div>
+          <div class="player-name" id="nO">O</div>
+          <div class="player-score" id="scO">0</div>
+        </div>
       </div>
-    </div>
-    <div id="roomErrMsg" class="error-msg"></div>
-    <button type="button" class="btn-ghost" onclick="showScreen('sLobby')">← Back</button>
-  </section>
 
-  <!-- ── WAITING FOR OPPONENT ───────────────────────────────── -->
-  <section class="screen" id="sWaiting" aria-label="Waiting for opponent" aria-live="polite">
-    <div class="panel" style="text-align:center;">
-      <h2>Private Room</h2>
-      <div class="room-code-box">
-        <button type="button" class="copy-btn" onclick="copyRoomCode()" aria-label="Copy room code">Copy</button>
-        <div style="font-size:.7rem;color:var(--text3);letter-spacing:.1em;margin-bottom:3px;">ROOM CODE</div>
-        <div class="room-code" id="dispCode" aria-label="Room code">——————</div>
+      <div class="status-bar" role="status" aria-live="polite">
+        <span id="gst" class="sx">X's Turn</span>
       </div>
-      <p style="font-size:.75rem;color:var(--text3);margin:8px 0;">Share this code with your friend</p>
-      <span class="badge badge-wait">Waiting for opponent<span class="dots" aria-hidden="true"></span></span>
-    </div>
-    <button type="button" class="btn-ghost" onclick="cancelWaiting()">Cancel</button>
-  </section>
 
-  <!-- ── MATCHMAKING ────────────────────────────────────────── -->
-  <section class="screen" id="sMM" aria-label="Finding a match" aria-live="polite">
-    <div class="panel" style="text-align:center;">
-      <h2>Finding a Match</h2>
-      <div class="matchmaking-spinner" aria-hidden="true"></div>
-      <p style="font-size:.78rem;color:var(--text3);margin-top:8px;">Searching for an opponent<span class="dots" aria-hidden="true"></span></p>
-    </div>
-    <button type="button" class="btn-ghost" onclick="cancelMatchmaking()">Cancel</button>
-  </section>
-
-  <!-- ── GAME ───────────────────────────────────────────────── -->
-  <section class="screen" id="sGame" aria-label="Game board">
-
-    <!-- Score bar -->
-    <div class="top-bar" role="group" aria-label="Scores">
-      <div class="player-card xc" id="cX">
-        <div class="player-avatar" id="avX">🎮</div>
-        <div class="player-name"   id="nX">X</div>
-        <div class="player-score"  id="scX">0</div>
-      </div>
-      <span class="vs-label" aria-hidden="true">VS</span>
-      <div class="timer-wrap" role="timer" aria-label="Turn timer">
-        <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true">
-          <circle class="timer-track" cx="24" cy="24" r="20"/>
-          <circle class="timer-arc"   id="tarc" cx="24" cy="24" r="20"/>
+      <!-- Board -->
+      <div class="board-wrap" id="bwrap">
+        <div class="board" id="board" role="grid" aria-label="Tic-tac-toe board"></div>
+        <svg id="win-line-svg" viewBox="0 0 296 296" preserveAspectRatio="none" aria-hidden="true">
+          <line id="wline" x1="-999" y1="-999" x2="-999" y2="-999" />
         </svg>
-        <div class="timer-number" id="tnum">15</div>
       </div>
-      <span class="vs-label" aria-hidden="true">VS</span>
-      <div class="player-card oc" id="cO">
-        <div class="player-avatar" id="avO">🤖</div>
-        <div class="player-name"   id="nO">O</div>
-        <div class="player-score"  id="scO">0</div>
+
+      <!-- Emoji reactions -->
+      <div class="emoji-bar" role="group" aria-label="Send a reaction">
+        <button type="button" class="emoji-btn" onclick="sendEmojiReaction('🔥', event)"
+          aria-label="Fire reaction">🔥</button>
+        <button type="button" class="emoji-btn" onclick="sendEmojiReaction('😂', event)"
+          aria-label="Laugh reaction">😂</button>
+        <button type="button" class="emoji-btn" onclick="sendEmojiReaction('👏', event)"
+          aria-label="Clap reaction">👏</button>
+        <button type="button" class="emoji-btn" onclick="sendEmojiReaction('😤', event)"
+          aria-label="Frustrated reaction">😤</button>
+        <button type="button" class="emoji-btn" onclick="sendEmojiReaction('🤯', event)"
+          aria-label="Mind blown reaction">🤯</button>
       </div>
-    </div>
 
-    <div class="status-bar" role="status" aria-live="polite">
-      <span id="gst" class="sx">X's Turn</span>
-    </div>
-
-    <!-- Board -->
-    <div class="board-wrap" id="bwrap">
-      <div class="board" id="board" role="grid" aria-label="Tic-tac-toe board"></div>
-      <svg id="win-line-svg" viewBox="0 0 296 296" preserveAspectRatio="none" aria-hidden="true">
-        <line id="wline" x1="-999" y1="-999" x2="-999" y2="-999"/>
-      </svg>
-    </div>
-
-    <!-- Emoji reactions -->
-    <div class="emoji-bar" role="group" aria-label="Send a reaction">
-      <button type="button" class="emoji-btn" onclick="sendEmojiReaction('🔥', event)" aria-label="Fire reaction">🔥</button>
-      <button type="button" class="emoji-btn" onclick="sendEmojiReaction('😂', event)" aria-label="Laugh reaction">😂</button>
-      <button type="button" class="emoji-btn" onclick="sendEmojiReaction('👏', event)" aria-label="Clap reaction">👏</button>
-      <button type="button" class="emoji-btn" onclick="sendEmojiReaction('😤', event)" aria-label="Frustrated reaction">😤</button>
-      <button type="button" class="emoji-btn" onclick="sendEmojiReaction('🤯', event)" aria-label="Mind blown reaction">🤯</button>
-    </div>
-
-    <!-- Chat -->
-    <div class="chat-box" id="chatBox">
-      <div class="chat-messages" id="cmsgs" role="log" aria-label="Chat messages" aria-live="polite"></div>
-      <div class="chat-input-row">
-        <input type="text" id="cin" placeholder="Say something…" maxlength="80" autocomplete="off" aria-label="Chat input">
-        <button type="button" onclick="sendChat()">Send</button>
-      </div>
-    </div>
-
-    <!-- In-session leaderboard -->
-    <div class="session-lb">
-      <div class="session-lb-header">
-        <span style="width:16px;margin-right:8px;">#</span>
-        <span style="flex:1;">THIS SESSION</span>
-        <span style="min-width:24px;text-align:right;">W</span>
-        <span style="min-width:20px;text-align:right;margin-left:8px;">D</span>
-      </div>
-      <div id="lbody"></div>
-    </div>
-
-    <!-- Actions -->
-    <div class="action-row">
-      <button type="button" class="btn-ghost" id="btnPA" style="display:none;" onclick="playAgain()">▶ Play Again</button>
-      <button type="button" class="btn-ghost" id="btnRematch" onclick="requestRematch()">🔄 Rematch</button>
-      <button type="button" class="btn-ghost" onclick="leaveGame()">Leave Game</button>
-    </div>
-    <div class="mode-pill" id="modePill">MODE</div>
-  </section>
-
-  <!-- ── LEADERBOARD ────────────────────────────────────────── -->
-  <section class="screen" id="sLeaderboard" aria-label="Global leaderboard">
-    <div class="panel" style="padding-bottom:8px;">
-      <h2>🏆 Global Leaderboard</h2>
-      <div class="tabs" role="tablist">
-        <button type="button" class="tab-btn active" role="tab" onclick="switchLeaderboardTab('wins', this)">Wins</button>
-        <button type="button" class="tab-btn"        role="tab" onclick="switchLeaderboardTab('xp', this)">XP</button>
-        <button type="button" class="tab-btn"        role="tab" onclick="switchLeaderboardTab('games', this)">Games</button>
-      </div>
-    </div>
-    <div class="panel" style="padding:10px;">
-      <div class="global-lb-head">
-        <span>#</span><span>Player</span><span>W</span><span>G</span><span>XP</span>
-      </div>
-      <div id="global-lbody" role="list"></div>
-    </div>
-  </section>
-
-  <!-- ── PROFILE ────────────────────────────────────────────── -->
-  <section class="screen" id="sProfile" aria-label="Player profile">
-    <div class="profile-top">
-
-    <div class="profile-avatar-lg" id="profile-av-lg">
-        🎮
-    </div>
-
-    <div class="profile-user">
-
-        <h2 id="profile-name-display">Player</h2>
-
-        <div class="player-id">
-            ID :<span id ="profile-id"> NX-000000</span>
-        </div>
-
-        <div class="level-badge" id="profile-level-badge">
-          ⭐ Level 1
-        </div>
-
-    </div>
-
-    <div class="profile-coins">
-
-        🪙
-        <span id="profile-coins">0</span>
-
-    </div>
-
-</div>
-
-    <div class="stats-grid" role="group" aria-label="Main stats">
-      <div class="stat-card s-wins">
-        <div class="stat-value" id="stat-wins">0</div>
-        <div class="stat-label">WINS</div>
-      </div>
-      <div class="stat-card s-games">
-        <div class="stat-value" id="stat-games">0</div>
-        <div class="stat-label">GAMES</div>
-      </div>
-      <div class="stat-card s-rate">
-        <div class="stat-value" id="stat-rate">0%</div>
-        <div class="stat-label">WIN RATE</div>
-      </div>
-    </div>
-
-    <div class="stats-grid" role="group" aria-label="Additional stats">
-      <div class="stat-card">
-        <div class="stat-value" id="stat-draws" style="color:var(--text2)">0</div>
-        <div class="stat-label">DRAWS</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="stat-streak" style="color:var(--purple)">0</div>
-        <div class="stat-label">BEST STREAK</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="stat-coins" style="color:var(--coin)">0</div>
-        <div class="stat-label">COINS</div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h2>🏅 Achievements (<span id="ach-count">0</span>/<span id="ach-total">0</span>)</h2>
-      <div class="ach-list" id="profile-ach-list" role="list"></div>
-    </div>
-  </section>
-
-  <!-- ── AVATAR SELECTION ───────────────────────────────────── -->
-  <section class="screen" id="sAvatars" aria-label="Choose avatar">
-    <div class="panel">
-      <h2>Choose Avatar</h2>
-      <div class="avatar-grid" id="avatar-grid" role="list"></div>
-    </div>
-    <button type="button" class="btn-ghost" onclick="navTo('sProfile')">← Back</button>
-  </section>
-
-  <!-- ── SHOP ──────────────────────────────────────────────── -->
-  <section class="screen" id="sShop" aria-label="Shop">
-
-  <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
-    <div class="section-label" style="margin:0;">🛒 Shop</div>
-
-    <div class="hud-coins">
-      <span>🪙</span>
-      <span id="shop-coins">0</span>
-    </div>
-  </div>
-
-  <!-- Tabs -->
-  <div class="tabs" style="margin:12px 0;">
-    <button
-      class="tab-btn active"
-      id="theme-tab"
-      onclick="showShopTab('themes')">
-      🎨 Themes
-    </button>
-
-    <button
-      class="tab-btn"
-      id="avatar-tab"
-      onclick="showShopTab('avatars')">
-      🎭 Avatars
-    </button>
-  </div>
-
-  <!-- Theme Shop -->
-  <div
-      class="shop-grid"
-      id="shop-grid"
-      role="list">
-  </div>
-
-  <!-- Avatar Shop -->
-  <div
-      class="avatar-grid"
-      id="avatar-grid-shop"
-      role="list"
-      style="display:none;">
-  </div>
-
-</section>
-
-  <!-- ── SETTINGS ──────────────────────────────────────────── -->
-  <section class="screen" id="sSettings" aria-label="Settings">
-    <div class="panel">
-      <h2>⚙️ Settings</h2>
-
-      <div class="setting-row">
-        <div class="setting-label">
-          <span>Sound Effects</span>
-          <small>Clicks, wins &amp; notifications</small>
-        </div>
-        <div class="toggle" id="toggle-sfx" onclick="toggleSetting('sfx')" role="switch" aria-checked="true" tabindex="0">
-          <div class="toggle-knob"></div>
+      <!-- Chat -->
+      <div class="chat-box" id="chatBox">
+        <div class="chat-messages" id="cmsgs" role="log" aria-label="Chat messages" aria-live="polite"></div>
+        <div class="chat-input-row">
+          <input type="text" id="cin" placeholder="Say something…" maxlength="80" autocomplete="off"
+            aria-label="Chat input">
+          <button type="button" onclick="sendChat()">Send</button>
         </div>
       </div>
 
-      <div class="setting-row">
-        <div class="setting-label">
-          <span>Sound Theme</span>
-          <small>Choose your sound pack</small>
+      <!-- In-session leaderboard -->
+      <div class="session-lb">
+        <div class="session-lb-header">
+          <span style="width:16px;margin-right:8px;">#</span>
+          <span style="flex:1;">THIS SESSION</span>
+          <span style="min-width:24px;text-align:right;">W</span>
+          <span style="min-width:20px;text-align:right;margin-left:8px;">D</span>
         </div>
-        <select class="theme-select" id="sound-theme-select" onchange="setSoundThemeFromSettings(this.value)" aria-label="Select sound theme">
-          <option value="classic">🎶 Classic</option>
-          <option value="energetic">⚡ Energetic</option>
-          <option value="mellow">🌙 Mellow</option>
-        </select>
+        <div id="lbody"></div>
       </div>
 
-      <div class="setting-row">
-        <div class="setting-label">
-          <span>Sound Previews</span>
-          <small>Click to preview different sounds</small>
+      <!-- Actions -->
+      <div class="action-row">
+        <button type="button" class="btn-ghost" id="btnPA" style="display:none;" onclick="playAgain()">▶ Play
+          Again</button>
+        <button type="button" class="btn-ghost" id="btnRematch" onclick="requestRematch()">🔄 Rematch</button>
+        <button type="button" class="btn-ghost" onclick="leaveGame()">Leave Game</button>
+      </div>
+      <div class="mode-pill" id="modePill">MODE</div>
+    </section>
+
+    <!-- ── LEADERBOARD ────────────────────────────────────────── -->
+    <section class="screen" id="sLeaderboard" aria-label="Global leaderboard">
+      <div class="panel" style="padding-bottom:8px;">
+        <h2>🏆 Global Leaderboard</h2>
+        <div class="tabs" role="tablist">
+          <button type="button" class="tab-btn active" role="tab"
+            onclick="switchLeaderboardTab('wins', this)">Wins</button>
+          <button type="button" class="tab-btn" role="tab" onclick="switchLeaderboardTab('xp', this)">XP</button>
+          <button type="button" class="tab-btn" role="tab" onclick="switchLeaderboardTab('games', this)">Games</button>
+        </div>
+      </div>
+      <div class="panel" style="padding:10px;">
+        <div class="global-lb-head">
+          <span>#</span><span>Player</span><span>W</span><span>G</span><span>XP</span>
+        </div>
+        <div id="global-lbody" role="list"></div>
+      </div>
+    </section>
+
+    <!-- ── PROFILE ────────────────────────────────────────────── -->
+    <section class="screen" id="sProfile" aria-label="Player profile">
+      <div class="profile-top">
+
+        <div class="profile-avatar-lg" id="profile-av-lg">
+          🎮
+        </div>
+
+        <div class="profile-user">
+
+          <h2 id="profile-name-display">Player</h2>
+
+          <div class="player-id">
+            ID :<span id="profile-id"> NX-000000</span>
+          </div>
+
+          <div class="level-badge" id="profile-level-badge">
+            ⭐ Level 1
+          </div>
+
+        </div>
+
+        <div class="profile-coins">
+
+          🪙
+          <span id="profile-coins">0</span>
+
+        </div>
+
+      </div>
+
+      <div class="stats-grid" role="group" aria-label="Main stats">
+        <div class="stat-card s-wins">
+          <div class="stat-value" id="stat-wins">0</div>
+          <div class="stat-label">WINS</div>
+        </div>
+        <div class="stat-card s-games">
+          <div class="stat-value" id="stat-games">0</div>
+          <div class="stat-label">GAMES</div>
+        </div>
+        <div class="stat-card s-rate">
+          <div class="stat-value" id="stat-rate">0%</div>
+          <div class="stat-label">WIN RATE</div>
         </div>
       </div>
 
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:8px 0;font-size:0.75rem;">
-        <button type="button" class="btn btn-o" style="font-size:0.75rem;" onclick="previewSoundFromSettings('click')">🔊 Click</button>
-        <button type="button" class="btn btn-o" style="font-size:0.75rem;" onclick="previewSoundFromSettings('place')">📌 Place</button>
-        <button type="button" class="btn btn-o" style="font-size:0.75rem;" onclick="previewSoundFromSettings('win')">🎉 Win</button>
-        <button type="button" class="btn btn-o" style="font-size:0.75rem;" onclick="previewSoundFromSettings('loss')">😢 Loss</button>
-        <button type="button" class="btn btn-o" style="font-size:0.75rem;" onclick="previewSoundFromSettings('bonus')">✨ Bonus</button>
-        <button type="button" class="btn btn-o" style="font-size:0.75rem;" onclick="previewSoundFromSettings('coin')">🪙 Coin</button>
-      </div>
-
-      <div class="setting-row">
-        <div class="setting-label">
-          <span>Background Music</span>
-          <small>Ambient game music</small>
+      <div class="stats-grid" role="group" aria-label="Additional stats">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-draws" style="color:var(--text2)">0</div>
+          <div class="stat-label">DRAWS</div>
         </div>
-        <div class="toggle" id="toggle-music" onclick="toggleSetting('music')" role="switch" aria-checked="false" tabindex="0">
-          <div class="toggle-knob"></div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-streak" style="color:var(--purple)">0</div>
+          <div class="stat-label">BEST STREAK</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-coins" style="color:var(--coin)">0</div>
+          <div class="stat-label">COINS</div>
         </div>
       </div>
 
-      <div class="setting-row">
-        <div class="setting-label">
-          <span>Confetti &amp; Fireworks</span>
-          <small>Win animations</small>
-        </div>
-        <div class="toggle on" id="toggle-confetti" onclick="toggleSetting('confetti')" role="switch" aria-checked="true" tabindex="0">
-          <div class="toggle-knob"></div>
+      <div class="panel">
+        <h2>🏅 Achievements (<span id="ach-count">0</span>/<span id="ach-total">0</span>)</h2>
+        <div class="ach-list" id="profile-ach-list" role="list"></div>
+      </div>
+    </section>
+
+    <!-- ── AVATAR SELECTION ───────────────────────────────────── -->
+    <section class="screen" id="sAvatars" aria-label="Choose avatar">
+      <div class="panel">
+        <h2>Choose Avatar</h2>
+        <div class="avatar-grid" id="avatar-grid" role="list"></div>
+      </div>
+      <button type="button" class="btn-ghost" onclick="navTo('sProfile')">← Back</button>
+    </section>
+
+    <!-- ── SHOP ──────────────────────────────────────────────── -->
+    <section class="screen" id="sShop" aria-label="Shop">
+
+      <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+        <div class="section-label" style="margin:0;">🛒 Shop</div>
+
+        <div class="hud-coins">
+          <span>🪙</span>
+          <span id="shop-coins">0</span>
         </div>
       </div>
 
-      <div class="setting-row">
-        <div class="setting-label">
-          <span>Theme</span>
-          <small>Visual style</small>
-        </div>
-        <select class="theme-select" id="theme-select" onchange="applyTheme(this.value)" aria-label="Select theme">
-          <option value="dark">🌑 Dark</option>
-          <option value="light">☀️ Light</option>
-          <option value="cyber">💻 Cyberpunk</option>
-          <option value="ocean">🌊 Ocean</option>
-          <option value="fire">🔥 Fire</option>
-          <option value="mint">🌿 Mint</option>
-          <option value="royalgold">👑 Royal Gold</option>
-        </select>
+      <!-- Tabs -->
+      <div class="tabs" style="margin:12px 0;">
+        <button class="tab-btn active" id="theme-tab" onclick="showShopTab('themes')">
+          🎨 Themes
+        </button>
+
+        <button class="tab-btn" id="avatar-tab" onclick="showShopTab('avatars')">
+          🎭 Avatars
+        </button>
       </div>
 
-      <div class="setting-row">
-        <div class="setting-label">
-          <span>Default Difficulty</span>
-          <small>Applied when starting a new AI game</small>
-        </div>
-        <select class="theme-select diff-select-ctrl" id="diff-select" onchange="setDefaultDifficulty(this.value)" aria-label="Default AI difficulty">
-          <option value="easy">🌱 Easy</option>
-          <option value="medium">⚡ Medium</option>
-          <option value="hard">💀 Hard</option>
-        </select>
+      <!-- Theme Shop -->
+      <div class="shop-grid" id="shop-grid" role="list">
       </div>
 
-      <div class="setting-row">
-        <div class="setting-label">
-          <span>Player Name</span>
-          <small id="settings-name-display">—</small>
-        </div>
-        <button type="button" class="edit-name-btn" onclick="openSettingsNameEdit()">✏️ Edit</button>
+      <!-- Avatar Shop -->
+      <div class="avatar-grid" id="avatar-grid-shop" role="list" style="display:none;">
       </div>
 
-      <div id="settings-name-edit" style="display:none;padding:8px 0 4px;">
-        <div class="name-edit-row">
-          <input
-            type="text"
-            id="settings-uname"
-            placeholder="New name…"
-            maxlength="16"
-            autocomplete="off"
-            onkeydown="if(event.key==='Enter') saveNameFromSettings(); if(event.key==='Escape') closeSettingsNameEdit();"
-            aria-label="New player name"
-          >
-          <button type="button" class="name-save-btn" onclick="saveNameFromSettings()">Save</button>
+    </section>
+
+    <!-- ── SETTINGS ──────────────────────────────────────────── -->
+    <section class="screen" id="sSettings" aria-label="Settings">
+      <div class="panel">
+        <h2>⚙️ Settings</h2>
+
+        <div class="setting-row">
+          <div class="setting-label">
+            <span>Sound Effects</span>
+            <small>Clicks, wins &amp; notifications</small>
+          </div>
+          <div class="toggle" id="toggle-sfx" onclick="toggleSetting('sfx')" role="switch" aria-checked="true"
+            tabindex="0">
+            <div class="toggle-knob"></div>
+          </div>
         </div>
-        <div style="margin-top:5px;text-align:right;">
-          <button type="button" class="btn-ghost" onclick="closeSettingsNameEdit()">Cancel</button>
+
+        <div class="setting-row">
+          <div class="setting-label">
+            <span>Sound Theme</span>
+            <small>Choose your sound pack</small>
+          </div>
+          <select class="theme-select" id="sound-theme-select" onchange="setSoundThemeFromSettings(this.value)"
+            aria-label="Select sound theme">
+            <option value="classic">🎶 Classic</option>
+            <option value="energetic">⚡ Energetic</option>
+            <option value="mellow">🌙 Mellow</option>
+          </select>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-label">
+            <span>Sound Previews</span>
+            <small>Click to preview different sounds</small>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:8px 0;font-size:0.75rem;">
+          <button type="button" class="btn btn-o" style="font-size:0.75rem;"
+            onclick="previewSoundFromSettings('click')">🔊 Click</button>
+          <button type="button" class="btn btn-o" style="font-size:0.75rem;"
+            onclick="previewSoundFromSettings('place')">📌 Place</button>
+          <button type="button" class="btn btn-o" style="font-size:0.75rem;"
+            onclick="previewSoundFromSettings('win')">🎉 Win</button>
+          <button type="button" class="btn btn-o" style="font-size:0.75rem;"
+            onclick="previewSoundFromSettings('loss')">😢 Loss</button>
+          <button type="button" class="btn btn-o" style="font-size:0.75rem;"
+            onclick="previewSoundFromSettings('bonus')">✨ Bonus</button>
+          <button type="button" class="btn btn-o" style="font-size:0.75rem;"
+            onclick="previewSoundFromSettings('coin')">🪙 Coin</button>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-label">
+            <span>Background Music</span>
+            <small>Ambient game music</small>
+          </div>
+          <div class="toggle" id="toggle-music" onclick="toggleSetting('music')" role="switch" aria-checked="false"
+            tabindex="0">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-label">
+            <span>Confetti &amp; Fireworks</span>
+            <small>Win animations</small>
+          </div>
+          <div class="toggle on" id="toggle-confetti" onclick="toggleSetting('confetti')" role="switch"
+            aria-checked="true" tabindex="0">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-label">
+            <span>Theme</span>
+            <small>Visual style</small>
+          </div>
+          <select class="theme-select" id="theme-select" onchange="applyTheme(this.value)" aria-label="Select theme">
+            <option value="dark">🌑 Dark</option>
+            <option value="light">☀️ Light</option>
+            <option value="cyber">💻 Cyberpunk</option>
+            <option value="ocean">🌊 Ocean</option>
+            <option value="fire">🔥 Fire</option>
+            <option value="mint">🌿 Mint</option>
+            <option value="royalgold">👑 Royal Gold</option>
+          </select>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-label">
+            <span>Default Difficulty</span>
+            <small>Applied when starting a new AI game</small>
+          </div>
+          <select class="theme-select diff-select-ctrl" id="diff-select" onchange="setDefaultDifficulty(this.value)"
+            aria-label="Default AI difficulty">
+            <option value="easy">🌱 Easy</option>
+            <option value="medium">⚡ Medium</option>
+            <option value="hard">💀 Hard</option>
+          </select>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-label">
+            <span>Player Name</span>
+            <small id="settings-name-display">—</small>
+          </div>
+          <button type="button" class="edit-name-btn" onclick="openSettingsNameEdit()">✏️ Edit</button>
+        </div>
+
+        <div id="settings-name-edit" style="display:none;padding:8px 0 4px;">
+          <div class="name-edit-row">
+            <input type="text" id="settings-uname" placeholder="New name…" maxlength="16" autocomplete="off"
+              onkeydown="if(event.key==='Enter') saveNameFromSettings(); if(event.key==='Escape') closeSettingsNameEdit();"
+              aria-label="New player name">
+            <button type="button" class="name-save-btn" onclick="saveNameFromSettings()">Save</button>
+          </div>
+          <div style="margin-top:5px;text-align:right;">
+            <button type="button" class="btn-ghost" onclick="closeSettingsNameEdit()">Cancel</button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="panel">
-      <h2>🗑️ Data</h2>
-      <button type="button" class="btn btn-o" onclick="confirmReset()">Reset All Progress</button>
-    </div>
-    <button
-      type="button"
-      class="btn btn-o"
-      onclick="logoutPlayer()">
-      🚪 Logout
-    </button>
-  </section>
+      <div class="panel">
+        <h2>🗑️ Data</h2>
+        <button type="button" class="btn btn-o" onclick="confirmReset()">Reset All Progress</button>
+      </div>
+      <button type="button" class="btn btn-o" onclick="logoutPlayer()">
+        🚪 Logout
+      </button>
+    </section>
 
-</div><!-- /#app -->
+  </div><!-- /#app -->
 
-<!-- ============================================================
+  <!-- ============================================================
      BOTTOM NAVIGATION
      ============================================================ -->
-<nav id="bottom-nav" aria-label="Main navigation">
-  <button type="button" class="bnav-btn active" id="bnav-home"    onclick="navTo('sLobby')">
-    <div class="bnav-icon">🎮</div>
-    <div class="bnav-label">PLAY</div>
-  </button>
-  <button type="button" class="bnav-btn" id="bnav-lb"      onclick="navTo('sLeaderboard')">
-    <div class="bnav-icon">🏆</div>
-    <div class="bnav-label">RANKS</div>
-  </button>
-  <button type="button" class="bnav-btn" id="bnav-profile" onclick="navTo('sProfile')">
-    <div class="bnav-icon">👤</div>
-    <div class="bnav-label">PROFILE</div>
-  </button>
-  <button type="button" class="bnav-btn" id="bnav-shop"    onclick="navTo('sShop')">
-    <div class="bnav-icon">🛒</div>
-    <div class="bnav-label">SHOP</div>
-  </button>
-</nav>
-<!-- Error handler FIRST (no defer) to catch all subsequent errors -->
-<script src="js/errorHandler.js"></script>
-<script defer src="js/constants.js"></script>
-<script defer src="js/state.js"></script>
-<script defer src="js/storage.js"></script>
-<script defer src="js/audio.js"></script>
-<script defer src="js/particles.js"></script>
-<script defer src="js/ai.js"></script>
-<script defer src="js/player.js"></script>
-<script defer src="js/profile.js"></script>
-<script defer src="js/avatar.js"></script>
-<script defer src="js/theme.js"></script>
-<script defer src="js/shop.js"></script>
-<script defer src="js/leaderboard.js"></script>
-<script defer src="js/settings.js"></script>
-<script defer src="js/config.js"></script>
-<script defer src="js/auth.js"></script>
-<script defer src="js/authManager.js"></script>
-<script defer src="js/notification.js"></script>
-<script defer src="js/dailyreward.js"></script>
-<script defer src="js/ui.js"></script>
-<script defer src="/socket.io/socket.io.js"></script>
-<script defer src="js/socket.js"></script>
-<script defer src="js/game.js"></script>
-<script defer src="js/main.js"></script>
+  <nav id="bottom-nav" aria-label="Main navigation">
+    <button type="button" class="bnav-btn active" id="bnav-home" onclick="navTo('sLobby')">
+      <div class="bnav-icon">🎮</div>
+      <div class="bnav-label">PLAY</div>
+    </button>
+    <button type="button" class="bnav-btn" id="bnav-lb" onclick="navTo('sLeaderboard')">
+      <div class="bnav-icon">🏆</div>
+      <div class="bnav-label">RANKS</div>
+    </button>
+    <button type="button" class="bnav-btn" id="bnav-profile" onclick="navTo('sProfile')">
+      <div class="bnav-icon">👤</div>
+      <div class="bnav-label">PROFILE</div>
+    </button>
+    <button type="button" class="bnav-btn" id="bnav-shop" onclick="navTo('sShop')">
+      <div class="bnav-icon">🛒</div>
+      <div class="bnav-label">SHOP</div>
+    </button>
+  </nav>
+  <!-- Error handler FIRST (no defer) to catch all subsequent errors -->
+  <script src="js/errorHandler.js"></script>
+  <script defer src="js/constants.js"></script>
+  <script defer src="js/state.js"></script>
+  <script defer src="js/storage.js"></script>
+  <script defer src="js/audio.js"></script>
+  <script defer src="js/particles.js"></script>
+  <script defer src="js/ai.js"></script>
+  <script defer src="js/player.js"></script>
+  <script defer src="js/profile.js"></script>
+  <script defer src="js/avatar.js"></script>
+  <script defer src="js/theme.js"></script>
+  <script defer src="js/shop.js"></script>
+  <script defer src="js/leaderboard.js"></script>
+  <script defer src="js/settings.js"></script>
+  <script defer src="js/config.js"></script>
+  <script defer src="js/auth.js"></script>
+  <script defer src="js/authManager.js"></script>
+  <script defer src="js/notification.js"></script>
+  <script defer src="js/dailyreward.js"></script>
+  <script defer src="js/ui.js"></script>
+  <script defer src="/socket.io/socket.io.js"></script>
+  <script defer src="js/socket.js"></script>
+  <script defer src="js/game.js"></script>
+  <script defer src="js/main.js"></script>
 </body>
+
 </html>
