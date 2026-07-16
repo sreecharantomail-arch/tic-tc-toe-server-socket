@@ -63,6 +63,9 @@
   --radius-card: 16px;
   --shadow: 0 15px 45px rgba(0, 0, 0, .55);
 
+  /* Layout tokens */
+  --shell-w: 900px; /* shared column width: header, HUD, screens */
+
   --font: 'Segoe UI', system-ui, sans-serif;
   --font-luxury: "Cinzel", serif;
 }
@@ -92,10 +95,10 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  padding: 24px 24px 80px 24px;
+  width: 100%;
+  padding: 24px clamp(16px, 2vw, 40px) 80px;
   gap: 20px;
   position: relative;
-  width: 100%;
 }
 
 /* Particle canvas sits above everything via z-index */
@@ -113,12 +116,13 @@ body {
 
 #game-header {
   width: 100%;
-  max-width: 520px;
+  max-width: var(--shell-w);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0;
   gap: 8px;
+  padding: 18px 0;
+  margin: 0 auto 24px;
 }
 
 .header-brand {
@@ -180,27 +184,27 @@ body {
 
 #player-hud {
   width: 100%;
-  max-width: 520px;
-  background: var(--card);
-  border: 1.5px solid var(--bd);
-  border-radius: var(--radius-card);
-  padding: 12px 16px;
-  margin: 0;
+  max-width: var(--shell-w);
+  min-height: 95px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 20px;
+  background: var(--card);
+  border: 1.5px solid var(--bd);
+  border-radius: 18px;
+  padding: 20px 24px;
 }
 
 .hud-avatar {
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   background: var(--card2);
   border: 2px solid var(--x);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.3rem;
+  font-size: 1.8rem;
   flex-shrink: 0;
   cursor: pointer;
   transition: transform 0.2s;
@@ -271,7 +275,7 @@ body {
 
 .screen {
   width: 100%;
-  max-width: 520px;
+  max-width: var(--shell-w);
   display: none;
   flex-direction: column;
   align-items: center;
@@ -305,6 +309,8 @@ body {
   border-radius: var(--radius-card);
   padding: 16px;
   width: 100%;
+  max-width: 620px;
+  margin-inline: auto;
 }
 
 .panel h2 {
@@ -313,6 +319,18 @@ body {
   color: var(--text3);
   text-transform: uppercase;
   margin-bottom: 12px;
+}
+
+/* Modifier: centre a panel's content (waiting / matchmaking screens) */
+.panel-center {
+  text-align: center;
+}
+
+/* Muted helper text inside a panel */
+.panel-hint {
+  font-size: 0.75rem;
+  color: var(--text3);
+  margin: 8px 0;
 }
 
 /* =============================================================================
@@ -339,6 +357,24 @@ input[type="text"]:focus {
 
 input[type="text"]::placeholder {
   color: var(--text3);
+}
+
+/* Input + button on one line (name save, room join) */
+.input-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.input-row input {
+  flex: 1;
+  margin: 0;
+}
+
+/* Right-aligned action row under an inline edit form */
+.edit-actions {
+  margin-top: 4px;
+  text-align: right;
 }
 
 /* =============================================================================
@@ -479,13 +515,49 @@ input[type="text"]::placeholder {
   background: var(--bd);
 }
 
+/* Small "edit" trigger (lobby welcome card, settings) */
+.edit-name-btn {
+  background: var(--card2);
+  border: 1.5px solid var(--bd);
+  border-radius: 9px;
+  color: var(--text3);
+  padding: 6px 10px;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition:
+    border-color .2s,
+    color .2s;
+  white-space: nowrap;
+  font-family: inherit;
+}
 
+.edit-name-btn:hover {
+  border-color: var(--x);
+  color: var(--x);
+}
 
+/* Save button paired with an .input-row input */
+.name-save-btn {
+  background: var(--glow-x);
+  border: 1.5px solid var(--x);
+  border-radius: 9px;
+  color: var(--x);
+  padding: 0 14px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background .2s,
+    color .2s,
+    border-color .2s;
+  white-space: nowrap;
+  font-family: inherit;
+}
 
-
-
-
-
+.name-save-btn:hover {
+  background: var(--x);
+  color: #000;
+}
 
 /* =============================================================================
    BOTTOM NAVIGATION

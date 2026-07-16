@@ -1,141 +1,40 @@
 /* ==========================================================
    RESPONSIVE LAYOUT SYSTEM
    NexaClash Ultimate Edition
+
+   Base sizing (box-sizing, container padding, panel width)
+   lives in main.css — this file holds breakpoint overrides only.
    ========================================================== */
 
-/* ---------- Base ---------- */
-
-html,
-body {
+/* .profile-top declares no width of its own; keep it full-bleed */
+.profile-top {
     width: 100%;
-    min-height: 100%;
-    overflow-x: hidden;
 }
 
-* {
-    box-sizing: border-box;
-}
+/* ---------- Tablet ---------- */
 
-/* ---------- Responsive Container ---------- */
-
-#app {
-
-    width: min(100%, 1400px);
-
-    margin-inline: auto;
-
-    padding-inline: clamp(16px, 2vw, 40px);
-
-}
-
-/* ---------- Responsive Screens ---------- */
-
-.screen {
-
-    width: 100%;
-
-    max-width: 100%;
-
-}
-
-/* ---------- Shared Panels ---------- */
-
-.panel {
-
-    width: 100%;
-
-    max-width: 620px;
-
-    margin-inline: auto;
-
-}
-
-/* ---------- Shared Cards ---------- */
-
-.welcome-card,
-.mode-grid,
-.profile-top,
-.shop-grid,
-.stats-grid {
-
-    width: 100%;
-
-}
-
-/* ==========================================================
-   LOBBY RESPONSIVE
-========================================================== */
-
-/* Large Desktop */
-@media (min-width:1600px) {
-
-    #app {
-        max-width: 1500px;
-    }
+@media (max-width: 768px) {
 
     .mode-grid {
-        max-width: 1100px;
-        margin-inline: auto;
-    }
-
-}
-
-/* Desktop */
-@media (max-width:1400px) {
-
-    .mode-grid {
-        width: 100%;
-    }
-
-}
-
-/* Laptop */
-@media (max-width:1024px) {
-
-    .mode-grid {
-
-        grid-template-columns: repeat(2, 1fr);
-
-        gap: 18px;
-
-    }
-
-}
-
-/* Tablet */
-@media (max-width:768px) {
-
-    .mode-grid {
-
         grid-template-columns: 1fr;
-
     }
 
     .welcome-card {
-
         flex-direction: column;
-
         text-align: center;
-
         gap: 16px;
-
     }
-
 }
 
-/* Mobile */
-@media (max-width:480px) {
+/* ---------- Mobile ---------- */
+
+@media (max-width: 480px) {
 
     #app {
-
         padding-inline: 12px;
-
     }
 
     .welcome-card {
-
         padding: 18px;
-
     }
-
 }

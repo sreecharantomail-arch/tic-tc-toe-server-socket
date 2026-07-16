@@ -1,17 +1,86 @@
 /* =============================================================================
+   LOBBY — NAME SETUP & WELCOME CARD
+   ============================================================================= */
+
+.name-setup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.welcome-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  background: var(--card);
+  border: 1.5px solid var(--bd);
+  border-radius: var(--radius-card);
+  padding: 16px 20px;
+}
+
+.welcome-avatar {
+  font-size: 2rem;
+  width: 52px;
+  height: 52px;
+  background: var(--card2);
+  border: 2px solid var(--x);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.welcome-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.welcome-label {
+  font-size: 0.65rem;
+  color: var(--text3);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.welcome-name {
+  font-size: 1.1rem;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.welcome-sub {
+  font-size: 0.65rem;
+  color: var(--text3);
+  margin-top: 2px;
+}
+
+/* Inline name-edit row revealed below the welcome card */
+#name-inline-edit {
+  margin-top: 8px;
+}
+
+/* =============================================================================
    LOBBY — MODE CARDS
    ============================================================================= */
 
 .mode-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
   width: 100%;
 }
 
+/* Variants only set the accent custom properties below;
+   every visual rule is shared and reads from them. */
 .mode-card {
   background: var(--card);
-  border: 1.5px solid var(--bd);
+  border: 1.5px solid var(--mc-border, var(--bd));
   border-radius: 14px;
   padding: 16px 10px;
   text-align: center;
@@ -28,12 +97,15 @@
   content: '';
   position: absolute;
   inset: 0;
+  background: radial-gradient(circle at 50% 0%, var(--mc-glow), transparent 70%);
   opacity: 0;
   transition: opacity 0.3s;
 }
 
 .mode-card:hover {
   transform: translateY(-3px);
+  border-color: var(--mc-accent);
+  box-shadow: 0 0 20px var(--mc-glow);
 }
 
 .mode-card:hover::before {
@@ -49,6 +121,7 @@
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.06em;
+  color: var(--mc-accent);
 }
 
 .mode-card .desc {
@@ -57,64 +130,25 @@
   margin-top: 3px;
 }
 
-.mode-card.mc-x {
-  border-color: #00f5ff33;
-}
+/* Accent variants — resting border is the accent at ~20% alpha */
+.mode-card.mc-x { --mc-accent: var(--x);      --mc-glow: var(--glow-x); --mc-border: #00f5ff33; }
+.mode-card.mc-o { --mc-accent: var(--o);      --mc-glow: var(--glow-o); --mc-border: #ff2d7833; }
+.mode-card.mc-y { --mc-accent: var(--win);    --mc-glow: var(--glow-y); --mc-border: #ffe06633; }
+.mode-card.mc-p { --mc-accent: var(--purple); --mc-glow: var(--glow-p); --mc-border: #9955ff33; }
 
-.mode-card.mc-x::before {
-  background: radial-gradient(circle at 50% 0%, var(--glow-x), transparent 70%);
-}
-
-.mode-card.mc-x:hover {
-  border-color: var(--x);
-  box-shadow: 0 0 20px var(--glow-x);
-}
-
-.mode-card.mc-o {
-  border-color: #ff2d7833;
-}
-
-.mode-card.mc-o::before {
-  background: radial-gradient(circle at 50% 0%, var(--glow-o), transparent 70%);
-}
-
-.mode-card.mc-o:hover {
-  border-color: var(--o);
-  box-shadow: 0 0 20px var(--glow-o);
-}
-
-.mode-card.mc-y {
-  border-color: #ffe06633;
-}
-
-.mode-card.mc-y::before {
-  background: radial-gradient(circle at 50% 0%, var(--glow-y), transparent 70%);
-}
-
-.mode-card.mc-y:hover {
-  border-color: var(--win);
-  box-shadow: 0 0 20px var(--glow-y);
-}
-
-.mode-card.mc-p {
-  border-color: #9955ff33;
-}
-
-.mode-card.mc-p::before {
-  background: radial-gradient(circle at 50% 0%, var(--glow-p), transparent 70%);
-}
-
-.mode-card.mc-p:hover {
-  border-color: var(--purple);
-  box-shadow: 0 0 20px var(--glow-p);
-}
-
-/* ----- Difficulty selector ----- */
+/* =============================================================================
+   LOBBY — DIFFICULTY SELECTOR
+   ============================================================================= */
 
 .diff-row {
   display: flex;
   gap: 6px;
   margin-top: 8px;
+}
+
+/* Start button sits below the selector row */
+.diff-row + .btn {
+  margin-top: 12px;
 }
 
 .diff-btn {
@@ -139,6 +173,7 @@
   color: var(--text);
 }
 
+/* Selected states — class applied by selectDifficulty() */
 .diff-btn.sel-easy {
   border-color: var(--x);
   color: var(--x);
@@ -157,7 +192,9 @@
   background: #1a1400;
 }
 
-/* ----- Room & matchmaking ----- */
+/* =============================================================================
+   LOBBY — ROOM & MATCHMAKING
+   ============================================================================= */
 
 .room-code-box {
   background: var(--bg2);
@@ -168,13 +205,26 @@
   position: relative;
 }
 
+.room-code-label {
+  font-size: 0.7rem;
+  color: var(--text3);
+  letter-spacing: 0.1em;
+  margin-bottom: 3px;
+}
+
 .room-code {
-  font-size: 2.2rem;
+  font-size: clamp(1.5rem, 8vw, 2.2rem);
   font-weight: 900;
   letter-spacing: 0.4em;
   color: var(--win);
   margin: 4px 0;
   text-shadow: 0 0 20px var(--glow-y);
+}
+
+/* Join-code input inside an .input-row */
+.join-code-input {
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
 }
 
 .copy-btn {
@@ -257,119 +307,4 @@
   to {
     transform: rotate(360deg);
   }
-}
-
-/* =============================================================================
-   LOBBY — NAME SETUP & WELCOME CARD
-   ============================================================================= */
-
-.name-setup {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-}
-
-.welcome-card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-  background: var(--card);
-  border: 1.5px solid var(--bd);
-  border-radius: var(--radius-card);
-  padding: 16px 20px;
-}
-
-.welcome-avatar {
-  font-size: 2rem;
-  width: 52px;
-  height: 52px;
-  background: var(--card2);
-  border: 2px solid var(--x);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.welcome-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.welcome-label {
-  font-size: 0.65rem;
-  color: var(--text3);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  margin-bottom: 2px;
-}
-
-.welcome-name {
-  font-size: 1.1rem;
-  font-weight: 800;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.welcome-sub {
-  font-size: 0.65rem;
-  color: var(--text3);
-  margin-top: 2px;
-}
-
-.edit-name-btn {
-  background: var(--card2);
-  border: 1.5px solid var(--bd);
-  border-radius: 9px;
-  color: var(--text3);
-  padding: 6px 10px;
-  font-size: 0.72rem;
-  cursor: pointer;
-  transition:
-    border-color .2s,
-    color .2s;
-  white-space: nowrap;
-  font-family: inherit;
-}
-
-.edit-name-btn:hover {
-  border-color: var(--x);
-  color: var(--x);
-}
-
-.name-edit-row {
-  display: flex;
-  gap: 8px;
-  width: 100%;
-}
-
-.name-edit-row input {
-  flex: 1;
-  margin: 0;
-}
-
-.name-save-btn {
-  background: var(--glow-x);
-  border: 1.5px solid var(--x);
-  border-radius: 9px;
-  color: var(--x);
-  padding: 0 14px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition:
-    background .2s,
-    color .2s,
-    border-color .2s;
-  white-space: nowrap;
-  font-family: inherit;
-}
-
-.name-save-btn:hover {
-  background: var(--x);
-  color: #000;
 }

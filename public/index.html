@@ -191,7 +191,7 @@
       <div id="name-setup-block" class="name-setup" style="display:none;">
         <div class="panel">
           <h2>Welcome — choose your name</h2>
-          <div class="name-edit-row">
+          <div class="input-row">
             <input type="text" id="uname" placeholder="Enter your name…" maxlength="16" autocomplete="off"
               onkeydown="if(event.key==='Enter') saveName()" aria-label="Your player name">
             <button type="button" class="name-save-btn" onclick="saveName()">Save</button>
@@ -212,14 +212,14 @@
           <button type="button" class="edit-name-btn" onclick="showNameEditRow()" title="Edit name"
             aria-label="Edit name">✏️ Edit</button>
         </div>
-        <div id="name-inline-edit" style="display:none;margin-top:8px;">
-          <div class="name-edit-row">
+        <div id="name-inline-edit" style="display:none;">
+          <div class="input-row">
             <input type="text" id="uname-edit" placeholder="New name…" maxlength="16" autocomplete="off"
               onkeydown="if(event.key==='Enter') saveNameFromEditRow(); if(event.key==='Escape') cancelNameEditRow();"
               aria-label="New player name">
             <button type="button" class="name-save-btn" onclick="saveNameFromEditRow()">Save</button>
           </div>
-          <div style="text-align:right;margin-top:4px;">
+          <div class="edit-actions">
             <button type="button" class="btn-ghost" onclick="cancelNameEditRow()">Cancel</button>
           </div>
         </div>
@@ -230,24 +230,24 @@
         <div class="mode-card mc-x" onclick="pickMode('2p')" role="button" tabindex="0"
           aria-label="2 Player local game">
           <div class="icon">👥</div>
-          <div class="label" style="color:var(--x)">2 Players</div>
+          <div class="label">2 Players</div>
           <div class="desc">Local offline</div>
         </div>
         <div class="mode-card mc-o" onclick="pickMode('ai')" role="button" tabindex="0" aria-label="Play versus AI">
           <div class="icon">🤖</div>
-          <div class="label" style="color:var(--o)">vs AI</div>
+          <div class="label">vs AI</div>
           <div class="desc">Challenge the bot</div>
         </div>
         <div class="mode-card mc-y" onclick="pickMode('room')" role="button" tabindex="0"
           aria-label="Create a private room">
           <div class="icon">🏠</div>
-          <div class="label" style="color:var(--win)">Private Room</div>
+          <div class="label">Private Room</div>
           <div class="desc">Invite a friend</div>
         </div>
         <div class="mode-card mc-p" onclick="pickMode('random')" role="button" tabindex="0"
           aria-label="Random matchmaking">
           <div class="icon">🌐</div>
-          <div class="label" style="color:var(--purple)">Quick Match</div>
+          <div class="label">Quick Match</div>
           <div class="desc">Play a stranger</div>
         </div>
       </div>
@@ -263,7 +263,7 @@
           <button type="button" class="diff-btn" data-d="medium" onclick="selectDifficulty(this)">⚡ Medium</button>
           <button type="button" class="diff-btn" data-d="hard" onclick="selectDifficulty(this)">💀 Hard</button>
         </div>
-        <button type="button" class="btn btn-o" style="margin-top:12px;" onclick="startAiGame()">⚔️ Start Game</button>
+        <button type="button" class="btn btn-o" onclick="startAiGame()">⚔️ Start Game</button>
       </div>
       <button type="button" class="btn-ghost" onclick="showScreen('sLobby')">← Back</button>
     </section>
@@ -277,9 +277,9 @@
       <div class="divider"><span>OR JOIN</span></div>
       <div class="panel">
         <h2>Join with a Code</h2>
-        <div style="display:flex;gap:8px;">
-          <input type="text" id="joinCode" placeholder="e.g. ABC123" maxlength="6"
-            style="text-transform:uppercase;letter-spacing:.15em;margin:0;" aria-label="Room code">
+        <div class="input-row">
+          <input type="text" id="joinCode" class="join-code-input" placeholder="e.g. ABC123" maxlength="6"
+            aria-label="Room code">
           <button type="button" class="btn btn-o btn-sm" onclick="joinPrivateRoom()">Join</button>
         </div>
       </div>
@@ -289,14 +289,14 @@
 
     <!-- ── WAITING FOR OPPONENT ───────────────────────────────── -->
     <section class="screen" id="sWaiting" aria-label="Waiting for opponent" aria-live="polite">
-      <div class="panel" style="text-align:center;">
+      <div class="panel panel-center">
         <h2>Private Room</h2>
         <div class="room-code-box">
           <button type="button" class="copy-btn" onclick="copyRoomCode()" aria-label="Copy room code">Copy</button>
-          <div style="font-size:.7rem;color:var(--text3);letter-spacing:.1em;margin-bottom:3px;">ROOM CODE</div>
+          <div class="room-code-label">ROOM CODE</div>
           <div class="room-code" id="dispCode" aria-label="Room code">——————</div>
         </div>
-        <p style="font-size:.75rem;color:var(--text3);margin:8px 0;">Share this code with your friend</p>
+        <p class="panel-hint">Share this code with your friend</p>
         <span class="badge badge-wait">Waiting for opponent<span class="dots" aria-hidden="true"></span></span>
       </div>
       <button type="button" class="btn-ghost" onclick="cancelWaiting()">Cancel</button>
@@ -304,11 +304,10 @@
 
     <!-- ── MATCHMAKING ────────────────────────────────────────── -->
     <section class="screen" id="sMM" aria-label="Finding a match" aria-live="polite">
-      <div class="panel" style="text-align:center;">
+      <div class="panel panel-center">
         <h2>Finding a Match</h2>
         <div class="matchmaking-spinner" aria-hidden="true"></div>
-        <p style="font-size:.78rem;color:var(--text3);margin-top:8px;">Searching for an opponent<span class="dots"
-            aria-hidden="true"></span></p>
+        <p class="panel-hint">Searching for an opponent<span class="dots" aria-hidden="true"></span></p>
       </div>
       <button type="button" class="btn-ghost" onclick="cancelMatchmaking()">Cancel</button>
     </section>
@@ -635,13 +634,13 @@
         </div>
 
         <div id="settings-name-edit" style="display:none;padding:8px 0 4px;">
-          <div class="name-edit-row">
+          <div class="input-row">
             <input type="text" id="settings-uname" placeholder="New name…" maxlength="16" autocomplete="off"
               onkeydown="if(event.key==='Enter') saveNameFromSettings(); if(event.key==='Escape') closeSettingsNameEdit();"
               aria-label="New player name">
             <button type="button" class="name-save-btn" onclick="saveNameFromSettings()">Save</button>
           </div>
-          <div style="margin-top:5px;text-align:right;">
+          <div class="edit-actions">
             <button type="button" class="btn-ghost" onclick="closeSettingsNameEdit()">Cancel</button>
           </div>
         </div>
