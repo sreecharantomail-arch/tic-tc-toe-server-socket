@@ -101,16 +101,15 @@ app.set("trust proxy", 1);
 // ─── Global middleware ──────────────────────────────────────────────────────
 app.use(helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
-    contentSecurityPolicy: false, // we set CSP manually below for reliability
+    contentSecurityPolicy: false,
 }));
 
-// Set CSP explicitly so inline onclick handlers and Socket.IO work on all hosts
+// Set CSP explicitly to strict policy (no unsafe-inline scripts)
 app.use((req, res, next) => {
     res.setHeader(
         "Content-Security-Policy",
         "default-src 'self'; " +
-        "script-src 'self' 'unsafe-inline'; " +
-        "script-src-attr 'unsafe-inline'; " +
+        "script-src 'self'; " +
         "style-src 'self' 'unsafe-inline'; " +
         "img-src 'self' data: https:; " +
         "connect-src 'self' https: wss:; " +

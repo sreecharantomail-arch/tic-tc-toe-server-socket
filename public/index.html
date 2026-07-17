@@ -60,7 +60,7 @@
       <div style="font-size:.75rem;color:var(--text3);margin-bottom:4px;">DAY STREAK</div>
       <div class="daily-coins-display">+<span id="daily-coins-amount">50</span> 🪙</div>
       <div class="daily-week" id="daily-week-dots"></div>
-      <button type="button" class="btn btn-y" onclick="handleClaimDaily()">Claim Reward!</button>
+      <button type="button" class="btn btn-y">Claim Reward!</button>
     </div>
   </div>
 
@@ -129,7 +129,7 @@
 
         <input type="password" id="register-confirm-password" placeholder="Confirm Password">
 
-        <button class="btn btn-y" id="register-submit-btn" type="button" onclick="registerPlayer()">
+        <button class="btn btn-y" id="register-submit-btn" type="button">
 
           Create Account
 
@@ -164,15 +164,15 @@
         <div class="header-subtitle">Ultimate Edition</div>
       </div>
       <nav class="header-nav" aria-label="Quick navigation">
-        <button type="button" class="nav-btn" onclick="navTo('sSettings')" title="Settings"
+        <button type="button" class="nav-btn" title="Settings"
           aria-label="Settings">⚙️</button>
-        <button type="button" class="nav-btn" onclick="navTo('sShop')" title="Shop" aria-label="Theme Shop">🛒</button>
+        <button type="button" class="nav-btn" title="Shop" aria-label="Theme Shop">🛒</button>
       </nav>
     </header>
 
     <!-- Player HUD -->
     <div id="player-hud" role="banner" aria-label="Player status">
-      <div class="hud-avatar" id="hud-avatar" onclick="navTo('sProfile')" title="View profile" role="button"
+      <div class="hud-avatar" id="hud-avatar" title="View profile" role="button"
         tabindex="0">🎮</div>
       <div class="hud-info">
         <div class="hud-name" id="hud-name">Guest</div>
@@ -192,9 +192,8 @@
         <div class="panel">
           <h2>Welcome — choose your name</h2>
           <div class="input-row">
-            <input type="text" id="uname" placeholder="Enter your name…" maxlength="16" autocomplete="off"
-              onkeydown="if(event.key==='Enter') saveName()" aria-label="Your player name">
-            <button type="button" class="name-save-btn" onclick="saveName()">Save</button>
+            <input type="text" id="uname" placeholder="Enter your name…" maxlength="16" autocomplete="off" aria-label="Your player name">
+            <button type="button" class="name-save-btn">Save</button>
           </div>
           <div id="nameErrMsg" class="error-msg"></div>
         </div>
@@ -209,42 +208,41 @@
             <div class="welcome-name" id="lobby-name">Player</div>
             <div class="welcome-sub" id="lobby-sub">Level 1 · 0 XP</div>
           </div>
-          <button type="button" class="edit-name-btn" onclick="showNameEditRow()" title="Edit name"
+          <button type="button" class="edit-name-btn" title="Edit name"
             aria-label="Edit name">✏️ Edit</button>
         </div>
         <div id="name-inline-edit" style="display:none;">
           <div class="input-row">
             <input type="text" id="uname-edit" placeholder="New name…" maxlength="16" autocomplete="off"
-              onkeydown="if(event.key==='Enter') saveNameFromEditRow(); if(event.key==='Escape') cancelNameEditRow();"
               aria-label="New player name">
-            <button type="button" class="name-save-btn" onclick="saveNameFromEditRow()">Save</button>
+            <button type="button" class="name-save-btn">Save</button>
           </div>
           <div class="edit-actions">
-            <button type="button" class="btn-ghost" onclick="cancelNameEditRow()">Cancel</button>
+            <button type="button" class="btn-ghost">Cancel</button>
           </div>
         </div>
       </div>
 
       <!-- Mode selection grid -->
       <div class="mode-grid" id="mode-grid" style="display:none;" role="group" aria-label="Select game mode">
-        <div class="mode-card mc-x" onclick="pickMode('2p')" role="button" tabindex="0"
+        <div class="mode-card mc-x" role="button" tabindex="0"
           aria-label="2 Player local game">
           <div class="icon">👥</div>
           <div class="label">2 Players</div>
           <div class="desc">Local offline</div>
         </div>
-        <div class="mode-card mc-o" onclick="pickMode('ai')" role="button" tabindex="0" aria-label="Play versus AI">
+        <div class="mode-card mc-o" role="button" tabindex="0" aria-label="Play versus AI">
           <div class="icon">🤖</div>
           <div class="label">vs AI</div>
           <div class="desc">Challenge the bot</div>
         </div>
-        <div class="mode-card mc-y" onclick="pickMode('room')" role="button" tabindex="0"
+        <div class="mode-card mc-y" role="button" tabindex="0"
           aria-label="Create a private room">
           <div class="icon">🏠</div>
           <div class="label">Private Room</div>
           <div class="desc">Invite a friend</div>
         </div>
-        <div class="mode-card mc-p" onclick="pickMode('random')" role="button" tabindex="0"
+        <div class="mode-card mc-p" role="button" tabindex="0"
           aria-label="Random matchmaking">
           <div class="icon">🌐</div>
           <div class="label">Quick Match</div>
@@ -258,21 +256,21 @@
       <div class="panel">
         <h2>Choose Difficulty</h2>
         <div class="diff-row" role="group" aria-label="Difficulty options">
-          <button type="button" class="diff-btn sel-easy" data-d="easy" onclick="selectDifficulty(this)">🌱
+          <button type="button" class="diff-btn sel-easy" data-d="easy">🌱
             Easy</button>
-          <button type="button" class="diff-btn" data-d="medium" onclick="selectDifficulty(this)">⚡ Medium</button>
-          <button type="button" class="diff-btn" data-d="hard" onclick="selectDifficulty(this)">💀 Hard</button>
+          <button type="button" class="diff-btn" data-d="medium">⚡ Medium</button>
+          <button type="button" class="diff-btn" data-d="hard">💀 Hard</button>
         </div>
-        <button type="button" class="btn btn-o" onclick="startAiGame()">⚔️ Start Game</button>
+        <button type="button" class="btn btn-o">⚔️ Start Game</button>
       </div>
-      <button type="button" class="btn-ghost" onclick="showScreen('sLobby')">← Back</button>
+      <button type="button" class="btn-ghost">← Back</button>
     </section>
 
     <!-- ── PRIVATE ROOM SETUP ─────────────────────────────────── -->
     <section class="screen" id="sRoom" aria-label="Private room setup">
       <div class="panel">
         <h2>Create a Private Room</h2>
-        <button type="button" class="btn btn-y" onclick="createPrivateRoom()">🏠 Generate Room Code</button>
+        <button type="button" class="btn btn-y">🏠 Generate Room Code</button>
       </div>
       <div class="divider"><span>OR JOIN</span></div>
       <div class="panel">
@@ -280,11 +278,11 @@
         <div class="input-row">
           <input type="text" id="joinCode" class="join-code-input" placeholder="e.g. ABC123" maxlength="6"
             aria-label="Room code">
-          <button type="button" class="btn btn-o btn-sm" onclick="joinPrivateRoom()">Join</button>
+          <button type="button" class="btn btn-o btn-sm">Join</button>
         </div>
       </div>
       <div id="roomErrMsg" class="error-msg"></div>
-      <button type="button" class="btn-ghost" onclick="showScreen('sLobby')">← Back</button>
+      <button type="button" class="btn-ghost">← Back</button>
     </section>
 
     <!-- ── WAITING FOR OPPONENT ───────────────────────────────── -->
@@ -292,14 +290,14 @@
       <div class="panel panel-center">
         <h2>Private Room</h2>
         <div class="room-code-box">
-          <button type="button" class="copy-btn" onclick="copyRoomCode()" aria-label="Copy room code">Copy</button>
+          <button type="button" class="copy-btn" aria-label="Copy room code">Copy</button>
           <div class="room-code-label">ROOM CODE</div>
           <div class="room-code" id="dispCode" aria-label="Room code">——————</div>
         </div>
         <p class="panel-hint">Share this code with your friend</p>
         <span class="badge badge-wait">Waiting for opponent<span class="dots" aria-hidden="true"></span></span>
       </div>
-      <button type="button" class="btn-ghost" onclick="cancelWaiting()">Cancel</button>
+      <button type="button" class="btn-ghost">Cancel</button>
     </section>
 
     <!-- ── MATCHMAKING ────────────────────────────────────────── -->
@@ -309,7 +307,7 @@
         <div class="matchmaking-spinner" aria-hidden="true"></div>
         <p class="panel-hint">Searching for an opponent<span class="dots" aria-hidden="true"></span></p>
       </div>
-      <button type="button" class="btn-ghost" onclick="cancelMatchmaking()">Cancel</button>
+      <button type="button" class="btn-ghost">Cancel</button>
     </section>
 
     <!-- ── GAME ───────────────────────────────────────────────── -->
@@ -352,15 +350,15 @@
 
       <!-- Emoji reactions -->
       <div class="emoji-bar" role="group" aria-label="Send a reaction">
-        <button type="button" class="emoji-btn" onclick="sendEmojiReaction('🔥', event)"
+        <button type="button" class="emoji-btn"
           aria-label="Fire reaction">🔥</button>
-        <button type="button" class="emoji-btn" onclick="sendEmojiReaction('😂', event)"
+        <button type="button" class="emoji-btn"
           aria-label="Laugh reaction">😂</button>
-        <button type="button" class="emoji-btn" onclick="sendEmojiReaction('👏', event)"
+        <button type="button" class="emoji-btn"
           aria-label="Clap reaction">👏</button>
-        <button type="button" class="emoji-btn" onclick="sendEmojiReaction('😤', event)"
+        <button type="button" class="emoji-btn"
           aria-label="Frustrated reaction">😤</button>
-        <button type="button" class="emoji-btn" onclick="sendEmojiReaction('🤯', event)"
+        <button type="button" class="emoji-btn"
           aria-label="Mind blown reaction">🤯</button>
       </div>
 
@@ -370,7 +368,7 @@
         <div class="chat-input-row">
           <input type="text" id="cin" placeholder="Say something…" maxlength="80" autocomplete="off"
             aria-label="Chat input">
-          <button type="button" onclick="sendChat()">Send</button>
+          <button type="button">Send</button>
         </div>
       </div>
 
@@ -387,10 +385,10 @@
 
       <!-- Actions -->
       <div class="action-row">
-        <button type="button" class="btn-ghost" id="btnPA" style="display:none;" onclick="playAgain()">▶ Play
+        <button type="button" class="btn-ghost" id="btnPA" style="display:none;">▶ Play
           Again</button>
-        <button type="button" class="btn-ghost" id="btnRematch" onclick="requestRematch()">🔄 Rematch</button>
-        <button type="button" class="btn-ghost" onclick="leaveGame()">Leave Game</button>
+        <button type="button" class="btn-ghost" id="btnRematch">🔄 Rematch</button>
+        <button type="button" class="btn-ghost">Leave Game</button>
       </div>
       <div class="mode-pill" id="modePill">MODE</div>
     </section>
@@ -400,10 +398,9 @@
       <div class="panel" style="padding-bottom:8px;">
         <h2>🏆 Global Leaderboard</h2>
         <div class="tabs" role="tablist">
-          <button type="button" class="tab-btn active" role="tab"
-            onclick="switchLeaderboardTab('wins', this)">Wins</button>
-          <button type="button" class="tab-btn" role="tab" onclick="switchLeaderboardTab('xp', this)">XP</button>
-          <button type="button" class="tab-btn" role="tab" onclick="switchLeaderboardTab('games', this)">Games</button>
+          <button type="button" class="tab-btn active" role="tab">Wins</button>
+          <button type="button" class="tab-btn" role="tab">XP</button>
+          <button type="button" class="tab-btn" role="tab">Games</button>
         </div>
       </div>
       <div class="panel" style="padding:10px;">
@@ -487,7 +484,7 @@
         <h2>Choose Avatar</h2>
         <div class="avatar-grid" id="avatar-grid" role="list"></div>
       </div>
-      <button type="button" class="btn-ghost" onclick="navTo('sProfile')">← Back</button>
+      <button type="button" class="btn-ghost">← Back</button>
     </section>
 
     <!-- ── SHOP ──────────────────────────────────────────────── -->
@@ -504,11 +501,11 @@
 
       <!-- Tabs -->
       <div class="tabs" style="margin:12px 0;">
-        <button class="tab-btn active" id="theme-tab" onclick="showShopTab('themes')">
+        <button class="tab-btn active" id="theme-tab">
           🎨 Themes
         </button>
 
-        <button class="tab-btn" id="avatar-tab" onclick="showShopTab('avatars')">
+        <button class="tab-btn" id="avatar-tab">
           🎭 Avatars
         </button>
       </div>
@@ -533,7 +530,7 @@
             <span>Sound Effects</span>
             <small>Clicks, wins &amp; notifications</small>
           </div>
-          <div class="toggle" id="toggle-sfx" onclick="toggleSetting('sfx')" role="switch" aria-checked="true"
+          <div class="toggle" id="toggle-sfx" role="switch" aria-checked="true"
             tabindex="0">
             <div class="toggle-knob"></div>
           </div>
@@ -544,7 +541,7 @@
             <span>Sound Theme</span>
             <small>Choose your sound pack</small>
           </div>
-          <select class="theme-select" id="sound-theme-select" onchange="setSoundThemeFromSettings(this.value)"
+          <select class="theme-select" id="sound-theme-select"
             aria-label="Select sound theme">
             <option value="classic">🎶 Classic</option>
             <option value="energetic">⚡ Energetic</option>
@@ -560,18 +557,12 @@
         </div>
 
         <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:8px 0;font-size:0.75rem;">
-          <button type="button" class="btn btn-o" style="font-size:0.75rem;"
-            onclick="previewSoundFromSettings('click')">🔊 Click</button>
-          <button type="button" class="btn btn-o" style="font-size:0.75rem;"
-            onclick="previewSoundFromSettings('place')">📌 Place</button>
-          <button type="button" class="btn btn-o" style="font-size:0.75rem;"
-            onclick="previewSoundFromSettings('win')">🎉 Win</button>
-          <button type="button" class="btn btn-o" style="font-size:0.75rem;"
-            onclick="previewSoundFromSettings('loss')">😢 Loss</button>
-          <button type="button" class="btn btn-o" style="font-size:0.75rem;"
-            onclick="previewSoundFromSettings('bonus')">✨ Bonus</button>
-          <button type="button" class="btn btn-o" style="font-size:0.75rem;"
-            onclick="previewSoundFromSettings('coin')">🪙 Coin</button>
+          <button type="button" class="btn btn-o" style="font-size:0.75rem;">🔊 Click</button>
+          <button type="button" class="btn btn-o" style="font-size:0.75rem;">📌 Place</button>
+          <button type="button" class="btn btn-o" style="font-size:0.75rem;">🎉 Win</button>
+          <button type="button" class="btn btn-o" style="font-size:0.75rem;">😢 Loss</button>
+          <button type="button" class="btn btn-o" style="font-size:0.75rem;">✨ Bonus</button>
+          <button type="button" class="btn btn-o" style="font-size:0.75rem;">🪙 Coin</button>
         </div>
 
         <div class="setting-row">
@@ -579,7 +570,7 @@
             <span>Background Music</span>
             <small>Ambient game music</small>
           </div>
-          <div class="toggle" id="toggle-music" onclick="toggleSetting('music')" role="switch" aria-checked="false"
+          <div class="toggle" id="toggle-music" role="switch" aria-checked="false"
             tabindex="0">
             <div class="toggle-knob"></div>
           </div>
@@ -590,7 +581,7 @@
             <span>Confetti &amp; Fireworks</span>
             <small>Win animations</small>
           </div>
-          <div class="toggle on" id="toggle-confetti" onclick="toggleSetting('confetti')" role="switch"
+          <div class="toggle on" id="toggle-confetti" role="switch"
             aria-checked="true" tabindex="0">
             <div class="toggle-knob"></div>
           </div>
@@ -601,7 +592,7 @@
             <span>Theme</span>
             <small>Visual style</small>
           </div>
-          <select class="theme-select" id="theme-select" onchange="applyTheme(this.value)" aria-label="Select theme">
+          <select class="theme-select" id="theme-select" aria-label="Select theme">
             <option value="dark">🌑 Dark</option>
             <option value="light">☀️ Light</option>
             <option value="cyber">💻 Cyberpunk</option>
@@ -617,7 +608,7 @@
             <span>Default Difficulty</span>
             <small>Applied when starting a new AI game</small>
           </div>
-          <select class="theme-select diff-select-ctrl" id="diff-select" onchange="setDefaultDifficulty(this.value)"
+          <select class="theme-select diff-select-ctrl" id="diff-select"
             aria-label="Default AI difficulty">
             <option value="easy">🌱 Easy</option>
             <option value="medium">⚡ Medium</option>
@@ -630,27 +621,26 @@
             <span>Player Name</span>
             <small id="settings-name-display">—</small>
           </div>
-          <button type="button" class="edit-name-btn" onclick="openSettingsNameEdit()">✏️ Edit</button>
+          <button type="button" class="edit-name-btn">✏️ Edit</button>
         </div>
 
         <div id="settings-name-edit" style="display:none;padding:8px 0 4px;">
           <div class="input-row">
             <input type="text" id="settings-uname" placeholder="New name…" maxlength="16" autocomplete="off"
-              onkeydown="if(event.key==='Enter') saveNameFromSettings(); if(event.key==='Escape') closeSettingsNameEdit();"
               aria-label="New player name">
-            <button type="button" class="name-save-btn" onclick="saveNameFromSettings()">Save</button>
+            <button type="button" class="name-save-btn">Save</button>
           </div>
           <div class="edit-actions">
-            <button type="button" class="btn-ghost" onclick="closeSettingsNameEdit()">Cancel</button>
+            <button type="button" class="btn-ghost">Cancel</button>
           </div>
         </div>
       </div>
 
       <div class="panel">
         <h2>🗑️ Data</h2>
-        <button type="button" class="btn btn-o" onclick="confirmReset()">Reset All Progress</button>
+        <button type="button" class="btn btn-o">Reset All Progress</button>
       </div>
-      <button type="button" class="btn btn-o" onclick="logoutPlayer()">
+      <button type="button" class="btn btn-o">
         🚪 Logout
       </button>
     </section>
@@ -661,19 +651,19 @@
      BOTTOM NAVIGATION
      ============================================================ -->
   <nav id="bottom-nav" aria-label="Main navigation">
-    <button type="button" class="bnav-btn active" id="bnav-home" onclick="navTo('sLobby')">
+    <button type="button" class="bnav-btn active" id="bnav-home">
       <div class="bnav-icon">🎮</div>
       <div class="bnav-label">PLAY</div>
     </button>
-    <button type="button" class="bnav-btn" id="bnav-lb" onclick="navTo('sLeaderboard')">
+    <button type="button" class="bnav-btn" id="bnav-lb">
       <div class="bnav-icon">🏆</div>
       <div class="bnav-label">RANKS</div>
     </button>
-    <button type="button" class="bnav-btn" id="bnav-profile" onclick="navTo('sProfile')">
+    <button type="button" class="bnav-btn" id="bnav-profile">
       <div class="bnav-icon">👤</div>
       <div class="bnav-label">PROFILE</div>
     </button>
-    <button type="button" class="bnav-btn" id="bnav-shop" onclick="navTo('sShop')">
+    <button type="button" class="bnav-btn" id="bnav-shop">
       <div class="bnav-icon">🛒</div>
       <div class="bnav-label">SHOP</div>
     </button>
