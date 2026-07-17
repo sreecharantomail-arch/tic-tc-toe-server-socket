@@ -140,9 +140,13 @@ function _tick() {
 // ROYAL GOLD WIN EFFECT
 // ==========================================================
 
-function _triggerRoyalGoldWinEffects() {
+function _triggerRoyalGoldWinEffects(combo) {
 
     _spawnRoyalGoldCoins();
+
+    if (combo && Array.isArray(combo)) {
+        _spawnRoyalGoldSparkles(combo);
+    }
 
 }
 

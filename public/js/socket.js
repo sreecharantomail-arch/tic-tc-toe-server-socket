@@ -48,17 +48,12 @@ function initSocket() {
   });
 
   // ── Matched! Both players are in — start the game ────────────
-  socket.on('room:matched', ({ code, symbol, opponentName, opponentAvatar }) => {
+  socket.on('room:matched', ({ code, symbol, hostName, guestName }) => {
     localSymbol = symbol;
     _activeRoomCode = code;
 
-    if (symbol === 'X') {
-      playerNames.X = player.name;
-      playerNames.O = opponentName;
-    } else {
-      playerNames.X = opponentName;
-      playerNames.O = player.name;
-    }
+    playerNames.X = hostName;
+    playerNames.O = guestName;
 
     const mode = gameMode === 'random' ? 'random' : 'room';
     addSystemMessage(`Matched! You are ${symbol}. ${playerNames.X} goes first.`);

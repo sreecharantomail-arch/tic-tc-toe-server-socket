@@ -29,6 +29,7 @@ const helmet = require("helmet");
 const cors = require("cors");
 const morgan = require("morgan");
 const { socketAuthMiddleware, requireAuth, getPlayerInfo } = require("./middleware/socketAuth");
+const mongoose = require("mongoose");
 const { 
     validateRoomCode, 
     validatePlayerName, 
@@ -751,8 +752,10 @@ async function gracefulShutdown(signal) {
 
     // Close database connection
     try {
-        await mongoose.connection.close();
-        logger.info("MongoDB connection closed");
+        if (mongoose.connection.readyState === 1) {
+            await mongoose.connection.close();
+            logger.info("MongoDB connection closed");
+        }
     } catch (err) {
         logError(err, { action: "closeDB" });
     }
@@ -777,7 +780,6 @@ process.on("unhandledRejection", (reason, promise) => {
 });
 
 // ─── Start ───────────────────────────────────────────────────────────────────
-const mongoose = require("mongoose");
 server.listen(PORT, "0.0.0.0", () => {
     console.log(`\n🎮 NexaClash Ultimate server running on http://localhost:${PORT}`);
     console.log(`   Environment: ${NODE_ENV}`);

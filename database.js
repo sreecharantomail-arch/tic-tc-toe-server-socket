@@ -28,7 +28,7 @@ const connectDB = async () => {
         });
     } catch (err) {
         console.error("MongoDB Connection Error:", err);
-        process.exit(1);
+        console.warn("Continuing without MongoDB. Auth and match persistence will not work.");
     }
 };
 

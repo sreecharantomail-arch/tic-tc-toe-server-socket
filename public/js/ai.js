@@ -93,6 +93,7 @@ function getAiMove(cells, difficulty){
 /** Pick a random empty cell — used directly for Easy and as fallback for Medium. */
 function _randomMove(cells) {
   const empty = cells.reduce((acc, v, i) => (v === '' ? [...acc, i] : acc), []);
+  if (empty.length === 0) return -1;
   return empty[Math.floor(Math.random() * empty.length)];
 }
 

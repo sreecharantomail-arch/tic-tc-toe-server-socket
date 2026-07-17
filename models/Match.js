@@ -123,7 +123,7 @@ matchSchema.statics.getLeaderboard = async function(options = {}) {
                 games: { $sum: 1 },
             },
         },
-        { $match: { _id: { $ne: "draw", $ne: null } } },
+        { $match: { _id: { $nin: ["draw", null] } } },
         { $sort: { [sortBy]: -1 } },
         { $limit: limit },
         {
