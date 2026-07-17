@@ -173,40 +173,6 @@ const io = new Server(server, {
 // Socket.io authentication middleware
 io.use(socketAuthMiddleware);
 
-// Per-socket event rate limiting
-const socketRateLimits = new Map();
-function socketRateLimiter(socket, eventName) {
-    const key = `${socket.id}:${eventName}`;
-    const now = Date.now();
-    const windowStart = now - SOCKET_EVENT_WINDOW_MS;
-
-    if (!socketRateLimits.has(key)) {
-        socketRateLimits.set(key, []);
-    }
-
-    const timestamps = socketRateLimits.get(key).filter(t => t > windowStart);
-    timestamps.push(now);
-    socketRateLimits.set(key, timestamps);
-
-    if (timestamps.length > SOCKET_EVENT_RATE_LIMIT) {
-        return false; // rate limited
-    }
-    return true;
-}
-
-// Clean up rate limit map periodically
-setInterval(() => {
-    const now = Date.now();
-    for (const [key, timestamps] of socketRateLimits) {
-        const recent = timestamps.filter(t => t > now - SOCKET_EVENT_WINDOW_MS);
-        if (recent.length === 0) {
-            socketRateLimits.delete(key);
-        } else {
-            socketRateLimits.set(key, recent);
-        }
-    }
-}, 60000);
-
 // ─── In-memory state ────────────────────────────────────────────────────────
 /**
  * rooms   Map<code, RoomObject>
@@ -812,7 +778,7 @@ process.on("unhandledRejection", (reason, promise) => {
 
 // ─── Start ───────────────────────────────────────────────────────────────────
 const mongoose = require("mongoose");
-server.listen(PORT, () => {
+server.listen(PORT, "0.0.0.0", () => {
     console.log(`\n🎮 NexaClash Ultimate server running on http://localhost:${PORT}`);
     console.log(`   Environment: ${NODE_ENV}`);
     console.log(`   Serving static files from ./public\n`);
