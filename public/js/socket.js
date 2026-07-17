@@ -9,36 +9,38 @@ let _activeRoomCode = ''; // room code for the current online game
 
 /** Connect (or reconnect) to the server. Called once on app boot. */
 function initSocket() {
-  // io() is provided by /socket.io/socket.io.js loaded from our server
-  socket = io({
-    autoConnect: true,
-    // Allow both transports so it works behind proxies (e.g. Render)
-    // that may not support raw WebSocket upgrades. Socket.IO will
-    // upgrade from polling to websocket automatically.
-    transports: ["polling", "websocket"],
-    reconnection: true,
-    reconnectionAttempts: Infinity,
-    reconnectionDelay: 1000,
-    reconnectionDelayMax: 5000,
-    timeout: 20000,
-    auth: { token: localStorage.getItem("nexa_token") || undefined },
-  });
+  // Delay initial connection slightly so that on platforms with cold-start
+  // behaviour (e.g. Render free tier) the server has time to become ready.
+  // Without this, the very first polling request can hit a still-booting
+  // backend and return 502 / 404.
+  setTimeout(() => {
+    // io() is provided by /socket.io/socket.io.js loaded from our server
+    socket = io({
+      autoConnect: true,
+      transports: ["polling", "websocket"],
+      reconnection: true,
+      reconnectionAttempts: Infinity,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      timeout: 30000,
+      auth: { token: localStorage.getItem("nexa_token") || undefined },
+    });
 
-  // ── Connection lifecycle ──────────────────────────────────────
-  socket.on('connect', () => {
-    _setConnBadge('online', '🟢 Connected');
-    setTimeout(() => _hideConnBadge(), 2500);
-    console.log('[socket] connected', socket.id);
-  });
+    // ── Connection lifecycle ──────────────────────────────────────
+    socket.on('connect', () => {
+      _setConnBadge('online', '🟢 Connected');
+      setTimeout(() => _hideConnBadge(), 2500);
+      console.log('[socket] connected', socket.id);
+    });
 
-  socket.on('disconnect', (reason) => {
-    _setConnBadge('offline', '🔴 Disconnected');
-    console.warn('[socket] disconnected', reason);
-  });
+    socket.on('disconnect', (reason) => {
+      _setConnBadge('offline', '🔴 Disconnected');
+      console.warn('[socket] disconnected', reason);
+    });
 
-  socket.on('connect_error', () => {
-    _setConnBadge('connecting', '🟡 Reconnecting…');
-  });
+    socket.on('connect_error', () => {
+      _setConnBadge('connecting', '🟡 Reconnecting…');
+    });
 
   // ── Room: created (you are the host) ─────────────────────────
   socket.on('room:created', ({ code, symbol }) => {
@@ -211,6 +213,7 @@ function initSocket() {
 
   // Set up global error handlers for Socket.IO
   setupSocketErrorHandlers(socket);
+  }, 2000); // small delay to avoid cold-start 502s on hosting platforms
 }
 
 // ── Connection badge helpers ────────────────────────────────────

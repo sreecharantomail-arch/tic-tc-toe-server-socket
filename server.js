@@ -99,7 +99,21 @@ app.set("trust proxy", 1);
 // ─── Global middleware ──────────────────────────────────────────────────────
 app.use(helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
-    contentSecurityPolicy: NODE_ENV === "production" ? undefined : false,
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'"],
+            scriptSrcAttr: ["'unsafe-inline'"],
+            styleSrc: ["'self'", "'unsafe-inline'"],
+            imgSrc: ["'self'", "data:", "https:"],
+            connectSrc: ["'self'", "https:", "wss:"],
+            fontSrc: ["'self'", "data:", "https:"],
+            objectSrc: ["'none'"],
+            frameAncestors: ["'none'"],
+            formAction: ["'self'"],
+            baseUri: ["'self'"],
+        }
+    }
 }));
 app.use(cors({
     origin: CORS_ORIGIN === "*" ? true : CORS_ORIGIN.split(","),
