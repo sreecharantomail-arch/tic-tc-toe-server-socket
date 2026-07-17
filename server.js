@@ -179,6 +179,13 @@ app.get("/api/version", (_req, res) => {
 
 // ─── Socket.io ──────────────────────────────────────────────────────────────
 const server = http.createServer(app);
+
+// Increase timeouts to avoid intermittent Connection reset by peer errors
+// on hosting providers with aggressive proxy/idle timeouts (e.g. Render).
+server.keepAliveTimeout = 120000; // 2 minutes
+server.headersTimeout = 120000;    // 2 minutes
+server.timeout = 120000;           // 2 minutes
+
 const io = new Server(server, {
     cors: {
         origin: CORS_ORIGIN === "*" ? true : CORS_ORIGIN.split(","),
