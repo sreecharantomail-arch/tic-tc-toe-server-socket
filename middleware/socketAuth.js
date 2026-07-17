@@ -27,7 +27,7 @@ async function socketAuthMiddleware(socket, next) {
         const player = await Player.findById(decoded.id).select("-password").lean();
 
         if (!player) {
-            logger.warn({ socketId: socket.id, userId: decoded.id }, "Token valid but user not found");
+            logger.warn("Token valid but user not found", { socketId: socket.id, userId: decoded.id });
             socket.user = null;
             return next();
         }
@@ -46,7 +46,7 @@ async function socketAuthMiddleware(socket, next) {
         next();
     } catch (err) {
         // Invalid token - allow as guest
-        logger.warn({ socketId: socket.id, error: err.message }, "Socket auth failed, continuing as guest");
+        logger.warn("Socket auth failed, continuing as guest", { socketId: socket.id, error: err.message });
         socket.user = null;
         next();
     }

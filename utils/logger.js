@@ -68,6 +68,9 @@ const logger = winston.createLogger({
   ],
 });
 
+// Safety: ensure common level methods exist (some winston builds/proxies miss them)
+if (typeof logger.warn !== "function") logger.warn = (...args) => logger.log("warning", ...args);
+
 /**
  * Log error with context
  * @param {Error} err - Error object

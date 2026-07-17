@@ -9,38 +9,71 @@ let _activeRoomCode = ''; // room code for the current online game
 
 /** Connect (or reconnect) to the server. Called once on app boot. */
 function initSocket() {
-  // Delay initial connection slightly so that on platforms with cold-start
-  // behaviour (e.g. Render free tier) the server has time to become ready.
-  // Without this, the very first polling request can hit a still-booting
-  // backend and return 502 / 404.
-  setTimeout(() => {
-    // io() is provided by /socket.io/socket.io.js loaded from our server
-    socket = io({
-      autoConnect: true,
-      transports: ["polling", "websocket"],
-      reconnection: true,
-      reconnectionAttempts: Infinity,
-      reconnectionDelay: 1000,
-      reconnectionDelayMax: 5000,
-      timeout: 30000,
-      auth: { token: localStorage.getItem("nexa_token") || undefined },
-    });
+  // On platforms with cold-start behaviour (e.g. Render free tier) the
+  // backend may still be booting when the page loads.  Poll /health until
+  // we get a 200 so that the first Socket.IO request doesn't hit a
+  // still-starting server and return 502 / 404.
+  _pollHealthAndConnect();
+}
 
-    // ── Connection lifecycle ──────────────────────────────────────
-    socket.on('connect', () => {
-      _setConnBadge('online', '🟢 Connected');
-      setTimeout(() => _hideConnBadge(), 2500);
-      console.log('[socket] connected', socket.id);
-    });
+let _healthPollId = null;
 
-    socket.on('disconnect', (reason) => {
-      _setConnBadge('offline', '🔴 Disconnected');
-      console.warn('[socket] disconnected', reason);
-    });
+function _pollHealthAndConnect() {
+  if (_healthPollId) return;
 
-    socket.on('connect_error', () => {
-      _setConnBadge('connecting', '🟡 Reconnecting…');
-    });
+  let attempts = 0;
+  const maxAttempts = 30; // ~30 seconds worst case
+
+  _healthPollId = setInterval(async () => {
+    attempts++;
+    try {
+      const res = await fetch('/health', { method: 'GET', cache: 'no-store' });
+      if (res.ok) {
+        clearInterval(_healthPollId);
+        _healthPollId = null;
+        _createSocketConnection();
+        return;
+      }
+    } catch (_) {
+      // server not ready yet
+    }
+
+    if (attempts >= maxAttempts) {
+      clearInterval(_healthPollId);
+      _healthPollId = null;
+      _createSocketConnection();
+    }
+  }, 1000);
+}
+
+function _createSocketConnection() {
+  // io() is provided by /socket.io/socket.io.js loaded from our server
+  socket = io({
+    autoConnect: true,
+    transports: ["polling", "websocket"],
+    reconnection: true,
+    reconnectionAttempts: Infinity,
+    reconnectionDelay: 1000,
+    reconnectionDelayMax: 5000,
+    timeout: 30000,
+    auth: { token: localStorage.getItem("nexa_token") || undefined },
+  });
+
+  // ── Connection lifecycle ──────────────────────────────────────
+  socket.on('connect', () => {
+    _setConnBadge('online', '🟢 Connected');
+    setTimeout(() => _hideConnBadge(), 2500);
+    console.log('[socket] connected', socket.id);
+  });
+
+  socket.on('disconnect', (reason) => {
+    _setConnBadge('offline', '🔴 Disconnected');
+    console.warn('[socket] disconnected', reason);
+  });
+
+  socket.on('connect_error', () => {
+    _setConnBadge('connecting', '🟡 Reconnecting…');
+  });
 
   // ── Room: created (you are the host) ─────────────────────────
   socket.on('room:created', ({ code, symbol }) => {
@@ -213,7 +246,6 @@ function initSocket() {
 
   // Set up global error handlers for Socket.IO
   setupSocketErrorHandlers(socket);
-  }, 2000); // small delay to avoid cold-start 502s on hosting platforms
 }
 
 // ── Connection badge helpers ────────────────────────────────────

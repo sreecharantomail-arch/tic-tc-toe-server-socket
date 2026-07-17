@@ -91,7 +91,9 @@ setInterval(() => {
 
 // ─── App & HTTP server ──────────────────────────────────────────────────────
 const app = express();
-connectDB();
+connectDB().catch((err) => {
+    logError(err, { action: "connectDB" });
+});
 
 // Trust proxy for rate limiting behind reverse proxy
 app.set("trust proxy", 1);
@@ -99,22 +101,28 @@ app.set("trust proxy", 1);
 // ─── Global middleware ──────────────────────────────────────────────────────
 app.use(helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
-    contentSecurityPolicy: {
-        directives: {
-            defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", "'unsafe-inline'"],
-            scriptSrcAttr: ["'unsafe-inline'"],
-            styleSrc: ["'self'", "'unsafe-inline'"],
-            imgSrc: ["'self'", "data:", "https:"],
-            connectSrc: ["'self'", "https:", "wss:"],
-            fontSrc: ["'self'", "data:", "https:"],
-            objectSrc: ["'none'"],
-            frameAncestors: ["'none'"],
-            formAction: ["'self'"],
-            baseUri: ["'self'"],
-        }
-    }
+    contentSecurityPolicy: false, // we set CSP manually below for reliability
 }));
+
+// Set CSP explicitly so inline onclick handlers and Socket.IO work on all hosts
+app.use((req, res, next) => {
+    res.setHeader(
+        "Content-Security-Policy",
+        "default-src 'self'; " +
+        "script-src 'self' 'unsafe-inline'; " +
+        "script-src-attr 'unsafe-inline'; " +
+        "style-src 'self' 'unsafe-inline'; " +
+        "img-src 'self' data: https:; " +
+        "connect-src 'self' https: wss:; " +
+        "font-src 'self' data: https:; " +
+        "object-src 'none'; " +
+        "frame-ancestors 'none'; " +
+        "form-action 'self'; " +
+        "base-uri 'self'"
+    );
+    next();
+});
+
 app.use(cors({
     origin: CORS_ORIGIN === "*" ? true : CORS_ORIGIN.split(","),
     credentials: true,
@@ -135,7 +143,7 @@ const apiLimiter = rateLimit({
     legacyHeaders: false,
     message: { success: false, message: "Too many requests, please try again later." },
     handler: (req, res) => {
-        logger.warn({ ip: req.ip, path: req.path }, "Rate limit exceeded");
+        logger.warn("Rate limit exceeded", { ip: req.ip, path: req.path });
         res.status(429).json({ success: false, message: "Too many requests, please try again later." });
     },
 });
@@ -398,7 +406,7 @@ io.on("connection", (socket) => {
         if (typeof handler === "function") {
             return originalOn(event, (...args) => {
                 if (!socketRateLimiter(socket, event)) {
-                    logger.warn({ socketId: socket.id, event }, "Socket rate limit exceeded");
+                    logger.warn("Socket rate limit exceeded", { socketId: socket.id, event });
                     return;
                 }
                 logSocketEvent(event, args[0], socket.id);
@@ -794,7 +802,7 @@ process.on("uncaughtException", (err) => {
 });
 
 process.on("unhandledRejection", (reason, promise) => {
-    logger.error({ reason, promise }, "Unhandled rejection");
+    logger.error("Unhandled rejection", { reason, promise });
 });
 
 // ─── Start ───────────────────────────────────────────────────────────────────
