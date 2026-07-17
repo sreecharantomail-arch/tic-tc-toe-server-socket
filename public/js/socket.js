@@ -12,8 +12,15 @@ function initSocket() {
   // io() is provided by /socket.io/socket.io.js loaded from our server
   socket = io({
     autoConnect: true,
-    reconnectionAttempts: 10,
-    reconnectionDelay: 1500,
+    // Allow both transports so it works behind proxies (e.g. Render)
+    // that may not support raw WebSocket upgrades. Socket.IO will
+    // upgrade from polling to websocket automatically.
+    transports: ["polling", "websocket"],
+    reconnection: true,
+    reconnectionAttempts: Infinity,
+    reconnectionDelay: 1000,
+    reconnectionDelayMax: 5000,
+    timeout: 20000,
     auth: { token: localStorage.getItem("nexa_token") || undefined },
   });
 

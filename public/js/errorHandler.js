@@ -69,8 +69,11 @@ function logError(message, level = ERROR_LEVELS.ERROR, error = null, context = {
     _errorLog.shift();
   }
 
-  // Console output with formatting
-  const logFn = console[level === ERROR_LEVELS.CRITICAL ? 'error' : level];
+  // Console output with formatting.
+  // Map our level strings to the actual console methods
+  // (console has no `warning` method — it's `warn`).
+  const consoleMethod = { info: 'info', warning: 'warn', error: 'error', critical: 'error' }[level] || 'log';
+  const logFn = console[consoleMethod] || console.log;
   const prefix = `[${level.toUpperCase()}] ${timestamp}`;
   logFn(`${prefix} ${message}`, error || context);
 }
