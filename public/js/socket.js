@@ -14,6 +14,7 @@ function initSocket() {
     autoConnect: true,
     reconnectionAttempts: 10,
     reconnectionDelay: 1500,
+    auth: { token: localStorage.getItem("nexa_token") || undefined },
   });
 
   // ── Connection lifecycle ──────────────────────────────────────
@@ -635,7 +636,13 @@ function _handleTimerExpiry() {
 
   addSystemMessage("🤖 Assistant played.");
 
-  _runAssistantTurn();
+  // In AI mode the assistant is always O; in 2p mode the turn was already
+  // flipped above, so play for the (now current) symbol.
+  if (gameMode === 'ai') {
+    _runAiMoveFor('O');
+  } else {
+    _runAssistantTurn();
+  }
 
 }
 

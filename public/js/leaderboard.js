@@ -59,7 +59,8 @@ function renderGlobalLeaderboard(sortKey = 'wins') {
 }
 
 function switchLeaderboardTab(sortKey, buttonEl) {
-  document.querySelectorAll('.tab-btn').forEach(btn => {
+  const lbPanel = document.getElementById('sLeaderboard');
+  (lbPanel || document).querySelectorAll('.tab-btn').forEach(btn => {
     btn.classList.remove('active');
   });
 

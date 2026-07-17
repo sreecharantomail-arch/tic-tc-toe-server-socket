@@ -174,9 +174,10 @@ function _flashBorder(inputEl) {
   setTimeout(() => (inputEl.style.borderColor = ''), 1200);
 }
 
-/** Show/clear any inline error message element(s) matching #errMsg. */
+/** Show/clear the inline room error message (#roomErrMsg in index.html). */
 function setErrorMessage(msg) {
-  document.querySelectorAll('#errMsg').forEach(el => (el.textContent = msg));
+  const el = document.getElementById('roomErrMsg');
+  if (el) el.textContent = msg;
 }
 
 

@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const Player = require("../models/Player");
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || "replace_with_secure_secret";
+const JWT_SECRET = process.env.JWT_SECRET || "replace_with_secure_secret_in_production";
 const JWT_EXPIRES_IN = "7d";
 
 function signToken(player) {

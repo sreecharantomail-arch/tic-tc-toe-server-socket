@@ -26,7 +26,7 @@ function awardXp(amount) {
   if (amount <= 0) return 0;
   player.xp = Math.max(0, player.xp + amount);
   const prevLevel = player.level;
-  while (player.level < XP_THRESHOLDS.length - 1 && player.xp >= getXpForLevel(player.level + 1)) {
+  while (player.xp >= getXpForLevel(player.level + 1)) {
     player.level++;
   }
 
