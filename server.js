@@ -332,6 +332,10 @@ function _handlePlayerLeave(socket) {
 
 async function persistMatchResult(room, winnerSymbol, endReason) {
     try {
+        if (mongoose.connection.readyState !== 1) {
+            logger.warn({ roomCode: room.code }, "Skipping match persist — DB not connected");
+            return;
+        }
         const winner = winnerSymbol === "D" ? "draw" : (winnerSymbol === "X" ? room.hostName : room.guestName);
         const match = new Match({
             roomCode: room.code,

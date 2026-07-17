@@ -85,6 +85,8 @@ function initSocket() {
     boardState.isOver      = over;
     boardState.scores      = scores;
 
+    if (over) _stopTimer();
+
     // Sync board UI
     boardCells.forEach((cell, i) => {
       const val = board[i];
@@ -660,6 +662,17 @@ function _runAiMoveFor(symbol){
   if(move === -1) return;
 
   _placeMarker(move, symbol);
+
+  // If the board is now full (draw), ensure turn flips and timer stops
+  if (boardState.cells.every(Boolean)) {
+    _stopTimer();
+    return;
+  }
+
+  boardState.currentTurn = boardState.currentTurn === 'X' ? 'O' : 'X';
+  _resetTurnTimer();
+  _setStatusText();
+  _updateActivePlayerCards();
 }
 
 // ================================================================
