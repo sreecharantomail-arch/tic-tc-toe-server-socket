@@ -1,9 +1,24 @@
 /* ==========================================================
-   RESPONSIVE LAYOUT SYSTEM
+   NEXACLASH VIEWPORT STANDARD — layout system
    NexaClash Ultimate Edition
 
-   Base sizing (box-sizing, container padding, panel width)
-   lives in main.css — this file holds breakpoint overrides only.
+   The app is a fixed-height launcher shell (see main.css):
+   header + HUD + active screen fill exactly one viewport and
+   the page itself NEVER scrolls.
+
+   • No-scroll screens (must fit): Lobby, Game, Profile, Settings.
+     Only designated content sections inside them may scroll
+     (e.g. the achievements list).
+   • Scrollable screens (content grows): Shop, Leaderboard —
+     they scroll internally inside the shell, never the page.
+   • The bottom nav is fixed; the shell reserves its band, so
+     content can never sit behind it.
+
+   Breakpoints:
+     ≥900px   desktop/laptop — multi-column launcher layouts
+     ≤768px   tablet portrait & below — stacked flow
+     ≤600px   compact chrome (smaller header/HUD tokens)
+     ≤480px   phone padding tweaks
    ========================================================== */
 
 /* .profile-top declares no width of its own; keep it full-bleed */
@@ -11,18 +26,165 @@
     width: 100%;
 }
 
-/* ---------- Tablet ---------- */
+/* ==========================================================
+   LOBBY — no-scroll screen
+   Content is short; center it vertically with flex spacers.
+   (Pseudo-spacers collapse to zero if content ever overflows,
+   so scrolling stays safe on tiny viewports.)
+   ========================================================== */
+
+#sLobby.active::before,
+#sLobby.active::after {
+    content: '';
+    flex: 1 1 0;
+    min-height: 0;
+}
+
+/* Same centered treatment for the short lobby-flow screens */
+#sAI.active::before,
+#sAI.active::after,
+#sRoom.active::before,
+#sRoom.active::after,
+#sWaiting.active::before,
+#sWaiting.active::after,
+#sMM.active::before,
+#sMM.active::after {
+    content: '';
+    flex: 1 1 0;
+    min-height: 0;
+}
+
+/* Launcher tiles: one row of four on desktop */
+@media (min-width: 900px) {
+
+    .mode-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* ==========================================================
+   GAME — no-scroll screen, board has priority
+   Desktop: two-column arena. Left column holds the match core
+   (scores, status, board, reactions, actions); right column is
+   the social rail (chat grows, session standings may scroll).
+   All 8 grid children are the screen's existing DOM order —
+   no markup changes, JS untouched.
+   ========================================================== */
+
+@media (min-width: 900px) {
+
+    #sGame.active {
+        display: grid;
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+        grid-template-rows: auto auto minmax(0, 1fr) auto auto auto;
+        grid-template-areas:
+            "top    chat"
+            "status chat"
+            "board  chat"
+            "emoji  slb"
+            "action slb"
+            "pill   slb";
+        gap: 10px 28px;
+        align-items: stretch;
+        justify-items: stretch;
+    }
+
+    #sGame .top-bar     { grid-area: top; }
+    #sGame .status-bar  { grid-area: status; }
+    #sGame .emoji-bar   { grid-area: emoji; align-self: center; }
+    #sGame .action-row  { grid-area: action; align-self: center; }
+    #sGame .mode-pill   { grid-area: pill; justify-self: center; align-self: start; }
+
+    /* Board: sized from the height budget left after the fixed rows
+       (~248px of scores/status/reactions/actions + row gaps).
+       Floor of 280px keeps the board playable — on very short
+       windows the screen's safety scroll kicks in instead of
+       shrinking the board further. */
+    #sGame .board-wrap {
+        grid-area: board;
+        align-self: center;
+        justify-self: center;
+        width: min(100%, max(280px, calc(var(--screen-h) - 248px)), 460px);
+    }
+
+    /* Chat fills the tall side of the rail */
+    #sGame .chat-box {
+        grid-area: chat;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        height: 100%;
+    }
+
+    #sGame .chat-messages {
+        height: auto;
+        flex: 1 1 80px;
+        min-height: 80px;
+    }
+
+    #sGame .chat-input-row {
+        flex-shrink: 0;
+    }
+
+    /* Session standings: a growing list — allowed to scroll inside */
+    #sGame .session-lb {
+        grid-area: slb;
+        min-height: 0;
+        overflow-y: auto;
+    }
+}
+
+/* ---------- Tablet & below ---------- */
 
 @media (max-width: 768px) {
 
+    /* 2×2 tiles keep the lobby inside the viewport on phones */
     .mode-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ---------- Compact chrome on small screens ---------- */
+
+@media (max-width: 600px) {
+
+    :root {
+        --header-h: 40px;
+        --hud-h: 72px;
+        --shell-pt: 10px;
+        --shell-gap: 10px;
     }
 
-    .welcome-card {
-        flex-direction: column;
-        text-align: center;
-        gap: 16px;
+    .hud-avatar {
+        width: 48px;
+        height: 48px;
+        font-size: 1.5rem;
+    }
+
+    #player-hud {
+        gap: 12px;
+        border-radius: 14px;
+    }
+
+    /* Match focus mode: during a game the top-bar already shows both
+       players, so the lobby chrome yields its space to the board.
+       (Browsers without :has() simply keep the chrome and the screen
+       scrolls internally — nothing breaks.) */
+    #app:has(#sGame.active) #game-header,
+    #app:has(#sGame.active) #player-hud {
+        display: none;
+    }
+
+    #app:has(#sGame.active) {
+        --screen-h: calc(var(--vh100) - var(--shell-pt) - var(--nav-h) - 12px);
+    }
+
+    #sGame.active {
+        gap: 12px;
+    }
+
+    #sGame .chat-messages {
+        height: 64px;
     }
 }
 
@@ -35,6 +197,10 @@
     }
 
     .welcome-card {
-        padding: 18px;
+        padding: 14px 16px;
+    }
+
+    .mode-card {
+        padding: 16px 8px;
     }
 }

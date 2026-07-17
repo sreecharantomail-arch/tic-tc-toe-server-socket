@@ -1,0 +1,55 @@
+module.exports = {
+    env: {
+        browser: true,
+        es2022: true,
+        node: true,
+    },
+    extends: [
+        "eslint:recommended",
+        "plugin:prettier/recommended",
+    ],
+    parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+    },
+    rules: {
+        "prettier/prettier": "error",
+        "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+        "no-console": ["warn", { "allow": ["warn", "error", "info", "debug"] }],
+        "eqeqeq": ["error", "always", { "null": "ignore" }],
+        "curly": ["error", "all"],
+        "no-var": "error",
+        "prefer-const": "error",
+        "object-shorthand": "error",
+        "prefer-template": "error",
+    },
+    overrides: [
+        {
+            files: ["public/**/*.js"],
+            env: {
+                browser: true,
+                es2022: true,
+            },
+            globals: {
+                io: "readonly",
+                document: "readonly",
+                window: "readonly",
+                localStorage: "readonly",
+                AudioContext: "readonly",
+                webkitAudioContext: "readonly",
+                requestAnimationFrame: "readonly",
+                cancelAnimationFrame: "readonly",
+                setTimeout: "readonly",
+                clearTimeout: "readonly",
+                setInterval: "readonly",
+                clearInterval: "readonly",
+                addEventListener: "readonly",
+                removeEventListener: "readonly",
+                fetch: "readonly",
+                navigator: "readonly",
+                canvas: "readonly",
+                SVGElement: "readonly",
+            },
+        },
+    ],
+};

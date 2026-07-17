@@ -1,81 +1,142 @@
+const mongoose = require("mongoose");
 
-/**
- * main.js
- * Application entry point — runs after all other scripts have loaded.
- *
- * Responsibilities:
- *  1. Animate the loading screen
- *  2. Call loadGameData() to restore the player's saved state
- *  3. Boot all subsystems (theme, particles, audio, UI)
- *  4. Wire up event listeners that span multiple modules
- *  5. Check for a pending daily reward
- */
+const matchSchema = new mongoose.Schema({
+    roomCode: {
+        type: String,
+        required: true,
+        index: true,
+    },
+    mode: {
+        type: String,
+        enum: ["room", "quick", "ai", "2p"],
+        required: true,
+        index: true,
+    },
+    hostName: {
+        type: String,
+        required: true,
+    },
+    guestName: {
+        type: String,
+        required: true,
+    },
+    hostAvatar: {
+        type: String,
+        default: "gamer",
+    },
+    guestAvatar: {
+        type: String,
+        default: "robot",
+    },
+    winner: {
+        type: String,
+        required: true, // hostName, guestName, or "draw"
+    },
+    endReason: {
+        type: String,
+        enum: ["win", "draw", "forfeit", "timeout"],
+        required: true,
+    },
+    board: {
+        type: [String],
+        default: [],
+    },
+    scores: {
+        X: { type: Number, default: 0 },
+        O: { type: Number, default: 0 },
+        D: { type: Number, default: 0 },
+    },
+    duration: {
+        type: Number, // milliseconds
+        default: 0,
+    },
+    playedAt: {
+        type: Date,
+        default: Date.now,
+        index: true,
+    },
+}, {
+    timestamps: true,
+});
 
-// ----- Loading screen -----
+// Compound indexes for common queries
+matchSchema.index({ hostName: 1, playedAt: -1 });
+matchSchema.index({ guestName: 1, playedAt: -1 });
+matchSchema.index({ mode: 1, playedAt: -1 });
+matchSchema.index({ winner: 1, playedAt: -1 });
 
-function runLoadingScreen() {
-  const bar     = document.getElementById('loading-bar');
-  const msgEl   = document.getElementById('loading-msg');
-  let progress  = 0;
-  let msgIndex  = 0;
+// Static methods
+matchSchema.statics.getPlayerHistory = async function(playerName, options = {}) {
+    const { limit = 50, skip = 0, mode } = options;
+    const query = {
+        $or: [{ hostName: playerName }, { guestName: playerName }],
+    };
+    if (mode) query.mode = mode;
 
-  const interval = setInterval(() => {
-    progress += Math.random() * 18 + 5;
-    if (progress >= 100) progress = 100;
+    return this.find(query)
+        .sort({ playedAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean();
+};
 
-    bar.style.width    = `${progress}%`;
-    msgEl.textContent  = LOADING_MESSAGES[Math.min(msgIndex++, LOADING_MESSAGES.length - 1)];
+matchSchema.statics.getPlayerStats = async function(playerName) {
+    const matches = await this.find({
+        $or: [{ hostName: playerName }, { guestName: playerName }],
+    }).lean();
 
-    if (progress >= 100) {
-      clearInterval(interval);
-      setTimeout(() => {
-        const screen = document.getElementById('loading-screen');
-        screen.classList.add('hidden');
-        setTimeout(() => {
-          screen.style.display = 'none';
-          _bootApp();
-        }, 500);
-      }, 400);
+    let wins = 0, losses = 0, draws = 0, games = 0;
+    let totalDuration = 0;
+
+    for (const m of matches) {
+        games++;
+        totalDuration += m.duration || 0;
+        if (m.winner === "draw") {
+            draws++;
+        } else if (m.winner === playerName) {
+            wins++;
+        } else {
+            losses++;
+        }
     }
-  }, 120);
-}
 
-// ----- Boot -----
+    return {
+        games,
+        wins,
+        losses,
+        draws,
+        winRate: games > 0 ? ((wins / games) * 100).toFixed(1) : 0,
+        avgDuration: games > 0 ? Math.round(totalDuration / games) : 0,
+    };
+};
 
-function _bootApp() {
-  // Restore saved progress (merges into the live `player` object in state.js)
-  loadGameData();
+matchSchema.statics.getLeaderboard = async function(options = {}) {
+    const { limit = 100, mode, sortBy = "wins" } = options;
 
-  // Apply the player's chosen theme before anything renders
-  applyTheme(player.activeTheme, /* silent */ true);
+    const match = mode ? { mode } : {};
+    const pipeline = [
+        { $match: match },
+        {
+            $group: {
+                _id: "$winner",
+                wins: { $sum: { $cond: [{ $ne: ["$_id", "draw"] }, 1, 0] } },
+                games: { $sum: 1 },
+            },
+        },
+        { $match: { _id: { $ne: "draw", $ne: null } } },
+        { $sort: { [sortBy]: -1 } },
+        { $limit: limit },
+        {
+            $project: {
+                name: "$_id",
+                wins: 1,
+                games: 1,
+                _id: 0,
+            },
+        },
+    ];
 
-  // Start the particle canvas render loop
-  initParticles(document.getElementById('particle-canvas'));
+    return this.aggregate(pipeline);
+};
 
-  // Restore background music if the player had it on
-  if (player.settings.music) startBackgroundMusic();
-
-  // Render all persistent UI components
-  updateHud();
-  renderAvatarGrid();
-  renderShop();
-  renderSettings();
-  renderGlobalLeaderboard('wins');
-
-  // Show the lobby (name-entry or welcome-back depending on saved state)
-  refreshLobbyView();
-
-  // Wire up the chat Enter key handler (once, here, not inside game.js)
-  document.getElementById('cin')?.addEventListener('keydown', e => {
-    if (e.key === 'Enter') sendChat();
-  });
-
-  // Show daily reward modal if one is pending
-  if (isDailyRewardPending()) showDailyRewardModal();
-
-  // Connect to the Socket.io multiplayer server
-  initSocket();
-}
-
-// ----- Kick off the loading animation on DOMContentLoaded -----
-document.addEventListener('DOMContentLoaded', runLoadingScreen);
+module.exports = mongoose.model("Match", matchSchema);

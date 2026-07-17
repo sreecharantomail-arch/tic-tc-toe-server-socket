@@ -66,8 +66,31 @@
   /* Layout tokens */
   --shell-w: 900px; /* shared column width: header, HUD, screens */
 
+  /* ---- NexaClash Viewport Standard ----------------------------------
+     The app is a fixed-height launcher shell: header + HUD + screen fill
+     exactly one viewport; the fixed bottom nav gets its own reserved band.
+     Chrome rows have fixed heights so --screen-h stays exact even when
+     auth JS switches #app to display:block (inline style).             */
+  --vh100: 100vh;             /* viewport height (dvh when supported)   */
+  --nav-h: 54px;              /* fixed bottom nav band                  */
+  --header-h: 44px;           /* brand header row                       */
+  --hud-h: 84px;              /* player HUD card                        */
+  --shell-pt: 14px;           /* app top padding                        */
+  --shell-gap: 14px;          /* vertical rhythm between chrome rows    */
+  --screen-h: calc(var(--vh100)
+              - var(--shell-pt)
+              - var(--header-h) - var(--shell-gap)
+              - var(--hud-h)    - var(--shell-gap)
+              - var(--nav-h)    - 12px);   /* 12px breathing above nav  */
+
   --font: 'Segoe UI', system-ui, sans-serif;
   --font-luxury: "Cinzel", serif;
+}
+
+@supports (height: 100dvh) {
+  :root {
+    --vh100: 100dvh; /* tracks mobile URL-bar show/hide */
+  }
 }
 
 /* =============================================================================
@@ -85,19 +108,21 @@ body {
   animation: cyberBackground 12s ease infinite;
   color: var(--text);
   font-family: var(--font);
-  overflow-x: hidden;
+  overflow: hidden; /* viewport standard: the page never scrolls — screens scroll internally */
   transition: background .4s, color .4s;
 }
 
+/* Fixed-height shell. NOTE: auth JS toggles #app between display:none and
+   display:block, so spacing/centering below relies on margins (which work
+   in both block and flex flow), never on flex gap/alignment. */
 #app {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: 100vh;
+  height: var(--vh100);
   width: 100%;
-  padding: 24px clamp(16px, 2vw, 40px) 80px;
-  gap: 20px;
+  padding: var(--shell-pt) clamp(16px, 2vw, 40px) 0;
+  overflow: hidden;
   position: relative;
 }
 
@@ -117,12 +142,14 @@ body {
 #game-header {
   width: 100%;
   max-width: var(--shell-w);
+  height: var(--header-h); /* fixed: part of the --screen-h budget */
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 18px 0;
-  margin: 0 auto 24px;
+  padding: 0;
+  margin: 0 auto var(--shell-gap);
+  flex-shrink: 0;
 }
 
 .header-brand {
@@ -185,14 +212,16 @@ body {
 #player-hud {
   width: 100%;
   max-width: var(--shell-w);
-  min-height: 95px;
+  height: var(--hud-h); /* fixed: part of the --screen-h budget */
   display: flex;
   align-items: center;
   gap: 20px;
   background: var(--card);
   border: 1.5px solid var(--bd);
   border-radius: 18px;
-  padding: 20px 24px;
+  padding: 12px 20px;
+  margin: 0 auto var(--shell-gap);
+  flex-shrink: 0;
 }
 
 .hud-avatar {
@@ -281,10 +310,24 @@ body {
   align-items: center;
   gap: 20px;
   animation: fadeIn 0.3s ease;
+  margin-inline: auto; /* centers under display:block #app too */
 }
 
 .screen.active {
   display: flex;
+}
+
+/* Viewport standard: screens inside the shell occupy the exact space left
+   between the HUD and the bottom-nav band. Content is designed to fit on
+   Lobby / Game / Profile / Settings; overflow-y:auto is the safety valve
+   (and the scroll surface for Shop / Leaderboard, whose content grows).
+   #sAuth lives outside #app and keeps its own fixed-overlay sizing. */
+#app > .screen {
+  height: var(--screen-h);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 4px 4px 12px; /* room so hover lifts/glows don't clip at edges */
+  flex-shrink: 0;
 }
 
 @keyframes fadeIn {
@@ -571,6 +614,7 @@ input[type="text"]::placeholder {
   margin: 0 auto;
   width: 100%;
   max-width: 520px;
+  height: var(--nav-h); /* fixed band reserved by the shell height budget */
   background: var(--card);
   border-top: 1.5px solid var(--bd);
   display: flex;

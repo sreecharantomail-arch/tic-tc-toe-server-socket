@@ -4,14 +4,16 @@ const playerSchema = new mongoose.Schema({
 
     nexaId: {
         type: String,
-        unique: true
+        unique: true,
+        index: true,
     },
 
     username: {
         type: String,
         required: true,
         unique: true,
-        trim: true
+        trim: true,
+        index: true,
     },
 
     email: {
@@ -19,70 +21,136 @@ const playerSchema = new mongoose.Schema({
         required: true,
         unique: true,
         trim: true,
-        lowercase: true
+        lowercase: true,
+        index: true,
     },
 
     password: {
         type: String,
-        required: true
+        required: true,
+        select: false, // Never return password by default
     },
 
     avatar: {
         type: String,
-        default: "default"
+        default: "gamer",
     },
 
     activeTheme: {
         type: String,
-        default: "classic"
+        default: "dark",
     },
 
     ownedThemes: {
         type: [String],
-        default: ["classic"]
+        default: ["dark"],
     },
 
     ownedAvatars: {
         type: [String],
-        default: ["default"]
+        default: ["gamer", "robot"],
     },
 
     coins: {
         type: Number,
-        default: 100
+        default: 0,
+        min: 0,
     },
 
     xp: {
         type: Number,
-        default: 0
+        default: 0,
+        min: 0,
     },
 
     level: {
         type: Number,
-        default: 1
+        default: 1,
+        min: 1,
     },
 
     wins: {
         type: Number,
-        default: 0
+        default: 0,
+        min: 0,
     },
 
     losses: {
         type: Number,
-        default: 0
+        default: 0,
+        min: 0,
     },
 
     draws: {
         type: Number,
-        default: 0
+        default: 0,
+        min: 0,
+    },
+
+    currentStreak: {
+        type: Number,
+        default: 0,
+        min: 0,
+    },
+
+    bestStreak: {
+        type: Number,
+        default: 0,
+        min: 0,
+    },
+
+    beatHardAi: {
+        type: Boolean,
+        default: false,
+    },
+
+    lastDailyDate: {
+        type: String,
+    },
+
+    dailyStreak: {
+        type: Number,
+        default: 0,
+        min: 0,
+    },
+
+    totalDailyClaims: {
+        type: Number,
+        default: 0,
+        min: 0,
     },
 
     lastLogin: {
-        type: Date
-    }
+        type: Date,
+    },
+
+    settings: {
+        sfx: { type: Boolean, default: true },
+        music: { type: Boolean, default: false },
+        confetti: { type: Boolean, default: true },
+        soundTheme: { type: String, default: "classic" },
+    },
+
+    unlockedAchievements: {
+        type: [String],
+        default: [],
+    },
 
 }, {
-    timestamps: true
+    timestamps: true,
+    // Hide sensitive fields when converting to JSON
+    toJSON: {
+        transform: function(doc, ret) {
+            delete ret.password;
+            delete ret.__v;
+            return ret;
+        },
+    },
 });
+
+// Compound indexes for leaderboards
+playerSchema.index({ wins: -1, xp: -1 });
+playerSchema.index({ xp: -1, wins: -1 });
+playerSchema.index({ level: -1, xp: -1 });
 
 module.exports = mongoose.model("Player", playerSchema);
