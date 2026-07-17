@@ -1,6 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 
 const Player = require("../models/Player");
 
@@ -52,6 +53,13 @@ router.post("/register", async (req, res) => {
 
             });
 
+        }
+
+        if (!mongoose.connection || mongoose.connection.readyState !== 1) {
+            return res.status(503).json({
+                success: false,
+                message: "Database unavailable. Please try again later."
+            });
         }
 
         const usernameExists = await Player.findOne({
@@ -152,6 +160,13 @@ router.post("/login", async (req, res) => {
             return res.status(400).json({
                 success: false,
                 message: "Email and password are required."
+            });
+        }
+
+        if (!mongoose.connection || mongoose.connection.readyState !== 1) {
+            return res.status(503).json({
+                success: false,
+                message: "Database unavailable. Please try again later."
             });
         }
 
