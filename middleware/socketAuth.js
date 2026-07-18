@@ -1,8 +1,18 @@
-const jwt = require("jsonwebtoken");
-const Player = require("../models/Player");
-const logger = require("../utils/logger");
+const jwt = require('jsonwebtoken');
+const Player = require('../models/Player');
+// NOTE: utils/logger exports { logger, ... } — destructure, or .warn/.debug
+// land on the module object and crash the server on any invalid token.
+const loggerModule = require('../utils/logger');
 
-const JWT_SECRET = process.env.JWT_SECRET || "replace_with_secure_secret_in_production";
+console.log("LOGGER MODULE =", loggerModule);
+
+const logger = loggerModule.logger || loggerModule;
+
+console.log("logger.warn =", typeof logger.warn);
+console.log("logger.info =", typeof logger.info);
+console.log("logger.error =", typeof logger.error);
+
+const JWT_SECRET = process.env.JWT_SECRET || 'replace_with_secure_secret_in_production';
 
 /**
  * Socket.io authentication middleware
@@ -24,10 +34,13 @@ async function socketAuthMiddleware(socket, next) {
         const decoded = jwt.verify(token, JWT_SECRET);
 
         // Fetch fresh user data from DB (optional, could cache)
-        const player = await Player.findById(decoded.id).select("-password").lean();
+        const player = await Player.findById(decoded.id).select('-password').lean();
 
         if (!player) {
-            logger.warn("Token valid but user not found", { socketId: socket.id, userId: decoded.id });
+            logger.warn('Token valid but user not found', {
+                socketId: socket.id,
+                userId: decoded.id,
+            });
             socket.user = null;
             return next();
         }
@@ -42,11 +55,14 @@ async function socketAuthMiddleware(socket, next) {
             nexaId: player.nexaId,
         };
 
-        logger.debug({ socketId: socket.id, userId: player._id }, "Socket authenticated");
+        logger.debug('Socket authenticated', { socketId: socket.id, userId: player._id });
         next();
     } catch (err) {
         // Invalid token - allow as guest
-        logger.warn("Socket auth failed, continuing as guest", { socketId: socket.id, error: err.message });
+        logger.warn('Socket auth failed, continuing as guest', {
+            socketId: socket.id,
+            error: err.message,
+        });
         socket.user = null;
         next();
     }
@@ -58,7 +74,7 @@ async function socketAuthMiddleware(socket, next) {
  */
 function requireAuth(socket, next) {
     if (!socket.user) {
-        return next(new Error("Authentication required"));
+        return next(new Error('Authentication required'));
     }
     next();
 }
@@ -70,7 +86,7 @@ function getPlayerInfo(socket) {
     return {
         id: socket.user?.id,
         username: socket.user?.username || `Guest_${socket.id.slice(0, 4)}`,
-        avatar: socket.user?.avatar || "gamer",
+        avatar: socket.user?.avatar || 'gamer',
         nexaId: socket.user?.nexaId,
         isGuest: !socket.user,
     };

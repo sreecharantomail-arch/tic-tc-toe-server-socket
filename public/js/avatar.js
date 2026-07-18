@@ -1,21 +1,23 @@
 // ----- Avatar grid -----
 
 function renderAvatarGrid() {
-    const grid = document.getElementById("avatar-grid");
-    if (!grid) return;
+    const grid = document.getElementById('avatar-grid');
+    if (!grid) {
+        return;
+    }
 
-    grid.innerHTML = "";
+    grid.innerHTML = '';
 
     for (const av of AVATARS) {
         const owned = player.unlockedAvatars.includes(av.id);
         const selected = player.avatar === av.id;
 
-        const el = document.createElement("div");
-        el.className = `av-option${selected ? " selected" : ""}${!owned && av.cost > 0 ? " locked" : ""}`;
+        const el = document.createElement('div');
+        el.className = `av-option${selected ? ' selected' : ''}${!owned && av.cost > 0 ? ' locked' : ''}`;
         el.title = owned ? av.label : `${av.label} — 🪙 ${av.cost}`;
         el.textContent = av.emoji;
 
-        el.addEventListener("click", () => _onAvatarClick(av));
+        el.addEventListener('click', () => _onAvatarClick(av));
 
         grid.appendChild(el);
     }
@@ -23,11 +25,10 @@ function renderAvatarGrid() {
 
 function _onAvatarClick(av) {
     const owned = player.unlockedAvatars.includes(av.id);
-    const profileAv = document.getElementById("profile-av-lg");
+    const profileAv = document.getElementById('profile-av-lg');
 
     // Buy avatar if not owned
     if (!owned && av.cost > 0) {
-
         if (player.coins < av.cost) {
             showXpNotification(`You need ${av.cost} 🪙 to unlock this avatar.`);
             return;
@@ -47,7 +48,7 @@ function _onAvatarClick(av) {
 
         renderAvatarGrid();
 
-        if (typeof renderAvatarShop === "function") {
+        if (typeof renderAvatarShop === 'function') {
             renderAvatarShop();
         }
 
@@ -67,7 +68,7 @@ function _onAvatarClick(av) {
 
     renderAvatarGrid();
 
-    if (typeof renderAvatarShop === "function") {
+    if (typeof renderAvatarShop === 'function') {
         renderAvatarShop();
     }
 

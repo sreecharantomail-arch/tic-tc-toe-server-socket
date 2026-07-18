@@ -14,10 +14,10 @@
 
 // Error severity levels
 const ERROR_LEVELS = {
-  INFO: 'info',
-  WARNING: 'warning',
-  ERROR: 'error',
-  CRITICAL: 'critical',
+    INFO: 'info',
+    WARNING: 'warning',
+    ERROR: 'error',
+    CRITICAL: 'critical',
 };
 
 // Track error history to avoid spam
@@ -29,16 +29,16 @@ const MAX_ERROR_LOG_SIZE = 100;
  * Should be called as early as possible in app initialization.
  */
 function initGlobalErrorHandling() {
-  // Handle uncaught JavaScript errors
-  window.addEventListener('error', handleWindowError);
+    // Handle uncaught JavaScript errors
+    window.addEventListener('error', handleWindowError);
 
-  // Handle unhandled promise rejections
-  window.addEventListener('unhandledrejection', handleUnhandledRejection);
+    // Handle unhandled promise rejections
+    window.addEventListener('unhandledrejection', handleUnhandledRejection);
 
-  // Handle beforeunload errors (graceful shutdown)
-  window.addEventListener('beforeunload', handleBeforeUnload);
+    // Handle beforeunload errors (graceful shutdown)
+    window.addEventListener('beforeunload', handleBeforeUnload);
 
-  console.log('[errorHandler] Global error handling initialized');
+    console.debug('[errorHandler] Global error handling initialized');
 }
 
 /**
@@ -49,33 +49,37 @@ function initGlobalErrorHandling() {
  * @param {Object} context - Additional context (optional)
  */
 function logError(message, level = ERROR_LEVELS.ERROR, error = null, context = {}) {
-  const timestamp = new Date().toISOString();
-  const errorEntry = {
-    timestamp,
-    message,
-    level,
-    error: error ? {
-      name: error.name,
-      message: error.message,
-      stack: error.stack,
-    } : null,
-    context,
-  };
+    const timestamp = new Date().toISOString();
+    const errorEntry = {
+        timestamp,
+        message,
+        level,
+        error: error
+            ? {
+                  name: error.name,
+                  message: error.message,
+                  stack: error.stack,
+              }
+            : null,
+        context,
+    };
 
-  _errorLog.push(errorEntry);
+    _errorLog.push(errorEntry);
 
-  // Keep log size manageable
-  if (_errorLog.length > MAX_ERROR_LOG_SIZE) {
-    _errorLog.shift();
-  }
+    // Keep log size manageable
+    if (_errorLog.length > MAX_ERROR_LOG_SIZE) {
+        _errorLog.shift();
+    }
 
-  // Console output with formatting.
-  // Map our level strings to the actual console methods
-  // (console has no `warning` method — it's `warn`).
-  const consoleMethod = { info: 'info', warning: 'warn', error: 'error', critical: 'error' }[level] || 'log';
-  const logFn = console[consoleMethod] || console.log;
-  const prefix = `[${level.toUpperCase()}] ${timestamp}`;
-  logFn(`${prefix} ${message}`, error || context);
+    // Console output with formatting.
+    // Map our level strings to the actual console methods
+    // (console has no `warning` method — it's `warn`).
+    const consoleMethod =
+        { info: 'info', warning: 'warn', error: 'error', critical: 'error' }[level] || 'log';
+    // eslint-disable-next-line no-console -- dynamic dispatch to console.info/warn/error
+    const logFn = console[consoleMethod] || console.debug;
+    const prefix = `[${level.toUpperCase()}] ${timestamp}`;
+    logFn(`${prefix} ${message}`, error || context);
 }
 
 /**
@@ -83,24 +87,23 @@ function logError(message, level = ERROR_LEVELS.ERROR, error = null, context = {
  * @param {ErrorEvent} event
  */
 function handleWindowError(event) {
-  const { message, filename, lineno, colno, error } = event;
+    const { message, filename, lineno, colno, error } = event;
 
-  logError(
-    `JavaScript Error: ${message}`,
-    ERROR_LEVELS.ERROR,
-    error,
-    { filename, line: lineno, column: colno }
-  );
+    logError(`JavaScript Error: ${message}`, ERROR_LEVELS.ERROR, error, {
+        filename,
+        line: lineno,
+        column: colno,
+    });
 
-  // Show user-friendly notification
-  showErrorNotification(
-    'Oops! Something went wrong',
-    'A JavaScript error occurred. The game may be unstable. Try refreshing.',
-    'error'
-  );
+    // Show user-friendly notification
+    showErrorNotification(
+        'Oops! Something went wrong',
+        'A JavaScript error occurred. The game may be unstable. Try refreshing.',
+        'error'
+    );
 
-  // Prevent default error handling (browser popup)
-  event.preventDefault();
+    // Prevent default error handling (browser popup)
+    event.preventDefault();
 }
 
 /**
@@ -108,30 +111,33 @@ function handleWindowError(event) {
  * @param {PromiseRejectionEvent} event
  */
 function handleUnhandledRejection(event) {
-  const reason = event.reason;
+    const reason = event.reason;
 
-  const errorMessage = reason instanceof Error
-    ? reason.message
-    : (typeof reason === 'string' ? reason : JSON.stringify(reason));
+    const errorMessage =
+        reason instanceof Error
+            ? reason.message
+            : typeof reason === 'string'
+              ? reason
+              : JSON.stringify(reason);
 
-  logError(
-    `Unhandled Promise Rejection: ${errorMessage}`,
-    ERROR_LEVELS.ERROR,
-    reason instanceof Error ? reason : null,
-    { promiseReason: reason }
-  );
-
-  // Show user-friendly notification for critical promise rejections
-  if (reason instanceof Error) {
-    showErrorNotification(
-      'Connection Issue',
-      'A connection or data error occurred. Please try again.',
-      'warning'
+    logError(
+        `Unhandled Promise Rejection: ${errorMessage}`,
+        ERROR_LEVELS.ERROR,
+        reason instanceof Error ? reason : null,
+        { promiseReason: reason }
     );
-  }
 
-  // Prevent default unhandled rejection behavior
-  event.preventDefault();
+    // Show user-friendly notification for critical promise rejections
+    if (reason instanceof Error) {
+        showErrorNotification(
+            'Connection Issue',
+            'A connection or data error occurred. Please try again.',
+            'warning'
+        );
+    }
+
+    // Prevent default unhandled rejection behavior
+    event.preventDefault();
 }
 
 /**
@@ -139,10 +145,10 @@ function handleUnhandledRejection(event) {
  * @param {BeforeUnloadEvent} event
  */
 function handleBeforeUnload(event) {
-  // Clean up and log
-  if (_errorLog.length > 0) {
-    console.log('[errorHandler] Error log on unload:', _errorLog);
-  }
+    // Clean up and log
+    if (_errorLog.length > 0) {
+        console.debug('[errorHandler] Error log on unload:', _errorLog);
+    }
 }
 
 /**
@@ -153,12 +159,12 @@ function handleBeforeUnload(event) {
  * @param {number} duration - ms to show (0 = persistent)
  */
 function showErrorNotification(title, description, type = 'error', duration = 5000) {
-  // Find or create error notification container
-  let container = document.getElementById('error-notification-container');
-  if (!container) {
-    container = document.createElement('div');
-    container.id = 'error-notification-container';
-    container.style.cssText = `
+    // Find or create error notification container
+    let container = document.getElementById('error-notification-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'error-notification-container';
+        container.style.cssText = `
       position: fixed;
       top: 20px;
       right: 20px;
@@ -168,14 +174,14 @@ function showErrorNotification(title, description, type = 'error', duration = 50
       overflow-y: auto;
       pointer-events: none;
     `;
-    document.body.appendChild(container);
-  }
+        document.body.appendChild(container);
+    }
 
-  // Create notification element
-  const notification = document.createElement('div');
-  const typeClass = `error-notif-${type}`;
-  notification.className = `error-notification ${typeClass}`;
-  notification.style.cssText = `
+    // Create notification element
+    const notification = document.createElement('div');
+    const typeClass = `error-notif-${type}`;
+    notification.className = `error-notification ${typeClass}`;
+    notification.style.cssText = `
     background: ${getNotificationColor(type)};
     border-left: 4px solid ${getNotificationBorderColor(type)};
     color: #fff;
@@ -188,25 +194,25 @@ function showErrorNotification(title, description, type = 'error', duration = 50
     animation: slideIn 0.3s ease-out;
   `;
 
-  const titleEl = document.createElement('div');
-  titleEl.textContent = title;
-  titleEl.style.cssText = `
+    const titleEl = document.createElement('div');
+    titleEl.textContent = title;
+    titleEl.style.cssText = `
     font-weight: 600;
     font-size: 0.95rem;
     margin-bottom: 4px;
   `;
 
-  const descEl = document.createElement('div');
-  descEl.textContent = description;
-  descEl.style.cssText = `
+    const descEl = document.createElement('div');
+    descEl.textContent = description;
+    descEl.style.cssText = `
     font-size: 0.85rem;
     opacity: 0.95;
     line-height: 1.4;
   `;
 
-  const closeBtn = document.createElement('button');
-  closeBtn.textContent = '✕';
-  closeBtn.style.cssText = `
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '✕';
+    closeBtn.style.cssText = `
     position: absolute;
     top: 8px;
     right: 8px;
@@ -222,20 +228,20 @@ function showErrorNotification(title, description, type = 'error', duration = 50
     align-items: center;
     justify-content: center;
   `;
-  closeBtn.onclick = () => notification.remove();
+    closeBtn.onclick = () => notification.remove();
 
-  notification.style.position = 'relative';
-  notification.appendChild(titleEl);
-  notification.appendChild(descEl);
-  notification.appendChild(closeBtn);
+    notification.style.position = 'relative';
+    notification.appendChild(titleEl);
+    notification.appendChild(descEl);
+    notification.appendChild(closeBtn);
 
-  container.appendChild(notification);
+    container.appendChild(notification);
 
-  // Add animation keyframes
-  if (!document.getElementById('error-notif-styles')) {
-    const style = document.createElement('style');
-    style.id = 'error-notif-styles';
-    style.textContent = `
+    // Add animation keyframes
+    if (!document.getElementById('error-notif-styles')) {
+        const style = document.createElement('style');
+        style.id = 'error-notif-styles';
+        style.textContent = `
       @keyframes slideIn {
         from {
           transform: translateX(420px);
@@ -260,44 +266,44 @@ function showErrorNotification(title, description, type = 'error', duration = 50
         animation: fadeOut 0.3s ease-out forwards;
       }
     `;
-    document.head.appendChild(style);
-  }
+        document.head.appendChild(style);
+    }
 
-  // Auto-remove after duration
-  if (duration > 0) {
-    setTimeout(() => {
-      notification.classList.add('fade-out');
-      setTimeout(() => notification.remove(), 300);
-    }, duration);
-  }
+    // Auto-remove after duration
+    if (duration > 0) {
+        setTimeout(() => {
+            notification.classList.add('fade-out');
+            setTimeout(() => notification.remove(), 300);
+        }, duration);
+    }
 
-  return notification;
+    return notification;
 }
 
 /**
  * Get color for notification based on type.
  */
 function getNotificationColor(type) {
-  const colors = {
-    error: '#d32f2f',
-    warning: '#f57c00',
-    info: '#1976d2',
-    success: '#388e3c',
-  };
-  return colors[type] || colors.error;
+    const colors = {
+        error: '#d32f2f',
+        warning: '#f57c00',
+        info: '#1976d2',
+        success: '#388e3c',
+    };
+    return colors[type] || colors.error;
 }
 
 /**
  * Get border color for notification based on type.
  */
 function getNotificationBorderColor(type) {
-  const colors = {
-    error: '#ff6b6b',
-    warning: '#ffb74d',
-    info: '#64b5f6',
-    success: '#81c784',
-  };
-  return colors[type] || colors.error;
+    const colors = {
+        error: '#ff6b6b',
+        warning: '#ffb74d',
+        info: '#64b5f6',
+        success: '#81c784',
+    };
+    return colors[type] || colors.error;
 }
 
 /**
@@ -306,72 +312,58 @@ function getNotificationBorderColor(type) {
  * @param {Socket} socket - Socket.io socket instance
  */
 function setupSocketErrorHandlers(socket) {
-  if (!socket) return;
-
-  socket.on('connect_error', (error) => {
-    logError(
-      `Socket.IO Connection Error: ${error.message}`,
-      ERROR_LEVELS.WARNING,
-      error,
-      { code: error.code }
-    );
-
-    showErrorNotification(
-      'Connection Lost',
-      'Unable to connect to the server. Reconnecting…',
-      'warning',
-      3000
-    );
-  });
-
-  socket.on('disconnect', (reason) => {
-    if (reason === 'io server disconnect') {
-      logError(
-        'Socket.IO: Server disconnected client',
-        ERROR_LEVELS.WARNING,
-        null,
-        { reason }
-      );
-      showErrorNotification(
-        'Server Disconnect',
-        'The server has disconnected you. Please refresh.',
-        'error'
-      );
-    } else if (reason === 'io client disconnect') {
-      logError('Socket.IO: Client disconnected', ERROR_LEVELS.INFO, null, { reason });
-    } else {
-      logError(
-        `Socket.IO Disconnect: ${reason}`,
-        ERROR_LEVELS.WARNING,
-        null,
-        { reason }
-      );
-      showErrorNotification(
-        'Connection Issues',
-        'Your connection was interrupted. Reconnecting…',
-        'warning',
-        2000
-      );
+    if (!socket) {
+        return;
     }
-  });
 
-  socket.on('error', (error) => {
-    logError(
-      `Socket.IO Error: ${error}`,
-      ERROR_LEVELS.ERROR,
-      null,
-      { socketError: error }
-    );
+    socket.on('connect_error', error => {
+        logError(`Socket.IO Connection Error: ${error.message}`, ERROR_LEVELS.WARNING, error, {
+            code: error.code,
+        });
 
-    showErrorNotification(
-      'Network Error',
-      'A network error occurred. Please try again.',
-      'error',
-      4000
-    );
-  });
+        showErrorNotification(
+            'Connection Lost',
+            'Unable to connect to the server. Reconnecting…',
+            'warning',
+            3000
+        );
+    });
 
-  console.log('[errorHandler] Socket.IO error handlers installed');
+    socket.on('disconnect', reason => {
+        if (reason === 'io server disconnect') {
+            logError('Socket.IO: Server disconnected client', ERROR_LEVELS.WARNING, null, {
+                reason,
+            });
+            showErrorNotification(
+                'Server Disconnect',
+                'The server has disconnected you. Please refresh.',
+                'error'
+            );
+        } else if (reason === 'io client disconnect') {
+            logError('Socket.IO: Client disconnected', ERROR_LEVELS.INFO, null, { reason });
+        } else {
+            logError(`Socket.IO Disconnect: ${reason}`, ERROR_LEVELS.WARNING, null, { reason });
+            showErrorNotification(
+                'Connection Issues',
+                'Your connection was interrupted. Reconnecting…',
+                'warning',
+                2000
+            );
+        }
+    });
+
+    socket.on('error', error => {
+        logError(`Socket.IO Error: ${error}`, ERROR_LEVELS.ERROR, null, { socketError: error });
+
+        showErrorNotification(
+            'Network Error',
+            'A network error occurred. Please try again.',
+            'error',
+            4000
+        );
+    });
+
+    console.debug('[errorHandler] Socket.IO error handlers installed');
 }
 
 /**
@@ -381,48 +373,45 @@ function setupSocketErrorHandlers(socket) {
  * @returns {Promise}
  */
 async function safeFetch(url, options = {}) {
-  try {
-    const response = await fetch(url, options);
+    try {
+        const response = await fetch(url, options);
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      const errorMsg = errorData.message || `HTTP ${response.status}`;
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            const errorMsg = errorData.message || `HTTP ${response.status}`;
 
-      logError(
-        `API Error (${response.status}): ${url}`,
-        ERROR_LEVELS.WARNING,
-        null,
-        { status: response.status, url, error: errorMsg }
-      );
+            logError(`API Error (${response.status}): ${url}`, ERROR_LEVELS.WARNING, null, {
+                status: response.status,
+                url,
+                error: errorMsg,
+            });
 
-      showErrorNotification(
-        'API Request Failed',
-        `Failed to contact server: ${errorMsg}`,
-        'warning',
-        3000
-      );
+            showErrorNotification(
+                'API Request Failed',
+                `Failed to contact server: ${errorMsg}`,
+                'warning',
+                3000
+            );
 
-      throw new Error(`HTTP Error: ${response.status} - ${errorMsg}`);
+            throw new Error(`HTTP Error: ${response.status} - ${errorMsg}`);
+        }
+
+        return response;
+    } catch (error) {
+        logError(`Fetch Error: ${error.message}`, ERROR_LEVELS.ERROR, error, {
+            url,
+            options: { method: options.method || 'GET' },
+        });
+
+        showErrorNotification(
+            'Network Error',
+            'Failed to reach the server. Check your connection.',
+            'error',
+            3000
+        );
+
+        throw error;
     }
-
-    return response;
-  } catch (error) {
-    logError(
-      `Fetch Error: ${error.message}`,
-      ERROR_LEVELS.ERROR,
-      error,
-      { url, options: { method: options.method || 'GET' } }
-    );
-
-    showErrorNotification(
-      'Network Error',
-      'Failed to reach the server. Check your connection.',
-      'error',
-      3000
-    );
-
-    throw error;
-  }
 }
 
 /**
@@ -430,46 +419,50 @@ async function safeFetch(url, options = {}) {
  * @returns {string} Formatted error log
  */
 function getErrorLogFormatted() {
-  if (_errorLog.length === 0) return 'No errors logged.';
+    if (_errorLog.length === 0) {
+        return 'No errors logged.';
+    }
 
-  return _errorLog.map((entry) => {
-    const errorStr = entry.error
-      ? `${entry.error.name}: ${entry.error.message}`
-      : 'N/A';
-    return `[${entry.timestamp}] ${entry.level.toUpperCase()}: ${entry.message}\nError: ${errorStr}\nContext: ${JSON.stringify(entry.context, null, 2)}`;
-  }).join('\n---\n');
+    return _errorLog
+        .map(entry => {
+            const errorStr = entry.error ? `${entry.error.name}: ${entry.error.message}` : 'N/A';
+            return `[${entry.timestamp}] ${entry.level.toUpperCase()}: ${entry.message}\nError: ${errorStr}\nContext: ${JSON.stringify(entry.context, null, 2)}`;
+        })
+        .join('\n---\n');
 }
 
 /**
  * Export error log to console (useful for debugging).
  */
 function exportErrorLog() {
-  console.group('📋 NexaClash Error Log');
-  console.log(getErrorLogFormatted());
-  console.groupEnd();
+    /* eslint-disable no-console -- intentional debug output grouping */
+    console.group('📋 NexaClash Error Log');
+    console.info(getErrorLogFormatted());
+    console.groupEnd();
+    /* eslint-enable no-console */
 }
 
 /**
  * Clear error log.
  */
 function clearErrorLog() {
-  _errorLog = [];
-  console.log('[errorHandler] Error log cleared');
+    _errorLog = [];
+    console.debug('[errorHandler] Error log cleared');
 }
 
 /**
  * Get error statistics.
  */
 function getErrorStats() {
-  const stats = {
-    total: _errorLog.length,
-    byLevel: {},
-    recent: _errorLog.slice(-5),
-  };
+    const stats = {
+        total: _errorLog.length,
+        byLevel: {},
+        recent: _errorLog.slice(-5),
+    };
 
-  _errorLog.forEach((entry) => {
-    stats.byLevel[entry.level] = (stats.byLevel[entry.level] || 0) + 1;
-  });
+    _errorLog.forEach(entry => {
+        stats.byLevel[entry.level] = (stats.byLevel[entry.level] || 0) + 1;
+    });
 
-  return stats;
+    return stats;
 }

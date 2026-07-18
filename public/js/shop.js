@@ -1,25 +1,26 @@
 // ----- Theme shop -----
 
 function renderShop() {
-  const grid = document.getElementById('shop-grid');
-  if (!grid) return;
+    const grid = document.getElementById('shop-grid');
+    if (!grid) {
+        return;
+    }
 
-  grid.innerHTML = '';
+    grid.innerHTML = '';
 
-  const coinsEl = document.getElementById('shop-coins');
-  if (coinsEl) {
-    coinsEl.textContent = player.coins;
-  }
+    const coinsEl = document.getElementById('shop-coins');
+    if (coinsEl) {
+        coinsEl.textContent = player.coins;
+    }
 
-  for (const theme of THEMES) {
-    const owned = player.unlockedThemes.includes(theme.id);
-    const active = player.activeTheme === theme.id;
+    for (const theme of THEMES) {
+        const owned = player.unlockedThemes.includes(theme.id);
+        const active = player.activeTheme === theme.id;
 
-    const el = document.createElement('div');
-    el.className =
-      `shop-item${active ? ' active-theme' : ''}${!owned ? ' locked-item' : ''}`;
+        const el = document.createElement('div');
+        el.className = `shop-item${active ? ' active-theme' : ''}${!owned ? ' locked-item' : ''}`;
 
-    el.innerHTML = `
+        el.innerHTML = `
       <div class="theme-preview" style="background:${theme.bg}">
         <div class="tp-dot" style="background:${theme.accent1}"></div>
         <div class="tp-dot" style="background:${theme.accent2}"></div>
@@ -29,116 +30,104 @@ function renderShop() {
       <div class="shop-name">${theme.label}</div>
 
       ${
-        active
-          ? '<div class="shop-owned">✓ Active</div>'
-          : owned
-            ? '<div class="shop-owned">Owned</div>'
-            : `<div class="shop-price"><span>🪙</span>${theme.cost}</div>`
+          active
+              ? '<div class="shop-owned">✓ Active</div>'
+              : owned
+                ? '<div class="shop-owned">Owned</div>'
+                : `<div class="shop-price"><span>🪙</span>${theme.cost}</div>`
       }
 
-      ${
-        !owned
-          ? '<div class="shop-lock-badge">LOCKED</div>'
-          : ''
-      }
+      ${!owned ? '<div class="shop-lock-badge">LOCKED</div>' : ''}
     `;
 
-    el.addEventListener('click', () => _onThemeClick(theme));
+        el.addEventListener('click', () => _onThemeClick(theme));
 
-    grid.appendChild(el);
-  }
+        grid.appendChild(el);
+    }
 }
 
 function _onThemeClick(theme) {
-  const owned = player.unlockedThemes.includes(theme.id);
+    const owned = player.unlockedThemes.includes(theme.id);
 
-  // Buy theme
-  if (!owned) {
-    if (player.coins < theme.cost) {
-      showXpNotification(`Need ${theme.cost} 🪙`);
-      return;
+    // Buy theme
+    if (!owned) {
+        if (player.coins < theme.cost) {
+            showXpNotification(`Need ${theme.cost} 🪙`);
+            return;
+        }
+
+        player.coins -= theme.cost;
+
+        if (!player.unlockedThemes.includes(theme.id)) {
+            player.unlockedThemes.push(theme.id);
+        }
+
+        updateHud();
+        applyTheme(theme.id);
+        renderShop();
+        saveGameData();
+
+        return;
     }
 
-    player.coins -= theme.cost;
-
-    if (!player.unlockedThemes.includes(theme.id)) {
-      player.unlockedThemes.push(theme.id);
+    // Already active
+    if (player.activeTheme === theme.id) {
+        return;
     }
 
-    updateHud();
     applyTheme(theme.id);
     renderShop();
-    saveGameData();
-
-    return;
-  }
-
-  // Already active
-  if (player.activeTheme === theme.id) {
-    return;
-  }
-
-  applyTheme(theme.id);
-  renderShop();
 }
-
 
 //------- Shop Tabs----------
 
 // ----- Shop Tabs -----
 
 function showShopTab(tab) {
+    const themeGrid = document.getElementById('shop-grid');
+    const avatarGrid = document.getElementById('avatar-grid-shop');
 
-  const themeGrid = document.getElementById("shop-grid");
-  const avatarGrid = document.getElementById("avatar-grid-shop");
+    const themeTab = document.getElementById('theme-tab');
+    const avatarTab = document.getElementById('avatar-tab');
 
-  const themeTab = document.getElementById("theme-tab");
-  const avatarTab = document.getElementById("avatar-tab");
+    if (tab === 'themes') {
+        themeGrid.style.display = 'grid';
+        avatarGrid.style.display = 'none';
 
-  if (tab === "themes") {
+        themeTab.classList.add('active');
+        avatarTab.classList.remove('active');
 
-    themeGrid.style.display = "grid";
-    avatarGrid.style.display = "none";
+        renderShop();
+    } else {
+        themeGrid.style.display = 'none';
+        avatarGrid.style.display = 'grid';
 
-    themeTab.classList.add("active");
-    avatarTab.classList.remove("active");
+        themeTab.classList.remove('active');
+        avatarTab.classList.add('active');
 
-    renderShop();
-
-  } else {
-
-    themeGrid.style.display = "none";
-    avatarGrid.style.display = "grid";
-
-    themeTab.classList.remove("active");
-    avatarTab.classList.add("active");
-
-    renderAvatarShop();
-
-  }
-
+        renderAvatarShop();
+    }
 }
 // ----- Avatar Shop -----
 
 function renderAvatarShop() {
+    const grid = document.getElementById('avatar-grid-shop');
 
-  const grid = document.getElementById("avatar-grid-shop");
+    if (!grid) {
+        return;
+    }
 
-  if (!grid) return;
+    grid.innerHTML = '';
 
-  grid.innerHTML = "";
+    for (const av of AVATARS) {
+        const owned = player.unlockedAvatars.includes(av.id);
+        const selected = player.avatar === av.id;
 
-  for (const av of AVATARS) {
+        const card = document.createElement('div');
 
-    const owned = player.unlockedAvatars.includes(av.id);
-    const selected = player.avatar === av.id;
+        card.className = `shop-item ${selected ? 'active-theme' : ''}`;
 
-    const card = document.createElement("div");
-
-    card.className =
-      `shop-item ${selected ? "active-theme" : ""}`;
-
-    card.innerHTML = `
+        card.innerHTML = `
       <div style="font-size:48px;margin-bottom:10px;">
         ${av.emoji}
       </div>
@@ -148,18 +137,16 @@ function renderAvatarShop() {
       </div>
 
       ${
-        selected
-          ? '<div class="shop-owned">✓ Selected</div>'
-          : owned
-              ? '<div class="shop-owned">Owned</div>'
-              : `<div class="shop-price">🪙 ${av.cost}</div>`
+          selected
+              ? '<div class="shop-owned">✓ Selected</div>'
+              : owned
+                ? '<div class="shop-owned">Owned</div>'
+                : `<div class="shop-price">🪙 ${av.cost}</div>`
       }
     `;
 
-    card.onclick = () => _onAvatarClick(av);
+        card.onclick = () => _onAvatarClick(av);
 
-    grid.appendChild(card);
-
-  }
-
+        grid.appendChild(card);
+    }
 }

@@ -1,26 +1,26 @@
 module.exports = {
     apps: [
         {
-            name: "nexaclash",
-            script: "server.js",
-            instances: "max",
-            exec_mode: "cluster",
+            name: 'nexaclash',
+            script: 'server.js',
+            instances: 'max',
+            exec_mode: 'cluster',
             watch: false,
-            max_memory_restart: "500M",
+            max_memory_restart: '500M',
             env: {
-                NODE_ENV: "development",
+                NODE_ENV: 'development',
                 PORT: 3000,
             },
             env_production: {
-                NODE_ENV: "production",
+                NODE_ENV: 'production',
                 PORT: 3000,
             },
-            error_file: "./logs/pm2-error.log",
-            out_file: "./logs/pm2-out.log",
-            log_file: "./logs/pm2-combined.log",
+            error_file: './logs/pm2-error.log',
+            out_file: './logs/pm2-out.log',
+            log_file: './logs/pm2-combined.log',
             time: true,
             merge_logs: true,
-            log_date_format: "YYYY-MM-DD HH:mm:ss Z",
+            log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
         },
     ],
 };

@@ -145,14 +145,23 @@ router.post('/login', async (req, res) => {
         // otherwise player.password is undefined and bcrypt.compare throws.
         const player = await Player.findOne({ email: normalizedEmail }).select('+password');
 
+        console.log("Request body:", req.body);
+        console.log("Email received:", email);
+        console.log("Password received:", password);
+
+        console.log("PLAYER =", player);
+
         if (!player) {
             return res.status(400).json({
-                success: false,
-                message: 'Invalid email or password.',
-            });
-        }
+            success: false,
+            message: "Invalid email or password."
+        });
+    }
 
-        const validPassword = await bcrypt.compare(password, player.password);
+    console.log("Stored hash:", player.password);
+    console.log("Hash type:", typeof player.password);
+
+    const validPassword = await bcrypt.compare(password, player.password);
 
         if (!validPassword) {
             return res.status(400).json({

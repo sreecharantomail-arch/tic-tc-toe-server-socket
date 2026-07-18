@@ -7,11 +7,13 @@
  */
 
 // ----- Board cell elements (set during initGame) -----
+// NOTE: these are reassigned from socket.js, so they must stay `let`
+// (prefer-const can't see cross-file writes between <script> files).
 let boardCells = [];
 
 // ----- Timer internals -----
 let timerInterval = null;
-let timerSeconds  = TURN_DURATION;
+let timerSeconds = TURN_DURATION;
 
 // ----- Auto-reset after a round ends -----
 let roundResetTimeout = null;
@@ -26,43 +28,43 @@ function pickMode(mode) {
     gameMode = mode;
 
     switch (mode) {
-        case "2p":
+        case '2p':
             _start2PlayerGame();
             break;
 
-        case "ai":
-            showScreen("sAI");
+        case 'ai':
+            showScreen('sAI');
             break;
 
-        case "room":
-            showScreen("sRoom");
+        case 'room':
+            showScreen('sRoom');
             break;
 
-        case "random":
+        case 'random':
             _startMatchmaking();
             break;
     }
 }
 
 function _start2PlayerGame() {
-  const p2Name = prompt('Enter Player 2 name:', 'Player 2') || 'Player 2';
-  playerNames.X = player.name;
-  playerNames.O = p2Name.trim() || 'Player 2';
-  localSymbol   = 'X';
-  _initGame('2p');
+    const p2Name = prompt('Enter Player 2 name:', 'Player 2') || 'Player 2';
+    playerNames.X = player.name;
+    playerNames.O = p2Name.trim() || 'Player 2';
+    localSymbol = 'X';
+    _initGame('2p');
 }
 
 // ----- AI mode -----
 
 function selectDifficulty(buttonEl) {
-  document.querySelectorAll('.diff-btn').forEach(b => (b.className = 'diff-btn'));
-  aiDifficulty         = buttonEl.dataset.d;
-  buttonEl.classList.add(`sel-${aiDifficulty}`);
+    document.querySelectorAll('.diff-btn').forEach(b => (b.className = 'diff-btn'));
+    aiDifficulty = buttonEl.dataset.d;
+    buttonEl.classList.add(`sel-${aiDifficulty}`);
 }
 
 function startAiGame() {
-  playerNames.X = player.name;
-  playerNames.O = `AI (${aiDifficulty})`;
-  localSymbol   = 'X';
-  _initGame('ai');
+    playerNames.X = player.name;
+    playerNames.O = `AI (${aiDifficulty})`;
+    localSymbol = 'X';
+    _initGame('ai');
 }
