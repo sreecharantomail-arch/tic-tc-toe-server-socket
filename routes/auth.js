@@ -1,27 +1,27 @@
-const express = require("express");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
+const express = require('express');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 
-const Player = require("../models/Player");
+const Player = require('../models/Player');
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || "replace_with_secure_secret_in_production";
-const JWT_EXPIRES_IN = "7d";
+const JWT_SECRET = process.env.JWT_SECRET || 'replace_with_secure_secret_in_production';
+const JWT_EXPIRES_IN = '7d';
 
 function signToken(player) {
-  return jwt.sign(
-    {
-      id: player._id,
-      username: player.username,
-      email: player.email,
-      nexaId: player.nexaId,
-    },
-    JWT_SECRET,
-    {
-      expiresIn: JWT_EXPIRES_IN,
-    }
-  );
+    return jwt.sign(
+        {
+            id: player._id,
+            username: player.username,
+            email: player.email,
+            nexaId: player.nexaId,
+        },
+        JWT_SECRET,
+        {
+            expiresIn: JWT_EXPIRES_IN,
+        }
+    );
 }
 
 /*
@@ -31,76 +31,54 @@ POST /api/auth/register
 =========================================
 */
 
-router.post("/register", async (req, res) => {
-
+router.post('/register', async (req, res) => {
     try {
+        const { username, email, password } = req.body;
 
-        const {
-            username,
-            email,
-            password
-        } = req.body;
-
-        const normalizedUsername = typeof username === "string" ? username.trim() : "";
-        const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+        const normalizedUsername = typeof username === 'string' ? username.trim() : '';
+        const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : '';
 
         if (!normalizedUsername || !normalizedEmail || !password) {
-
             return res.status(400).json({
-
                 success: false,
-                message: "All fields are required."
-
+                message: 'All fields are required.',
             });
-
         }
 
         if (!mongoose.connection || mongoose.connection.readyState !== 1) {
             return res.status(503).json({
                 success: false,
-                message: "Database unavailable. Please try again later."
+                message: 'Database unavailable. Please try again later.',
             });
         }
 
         const usernameExists = await Player.findOne({
-
-            username: normalizedUsername
-
+            username: normalizedUsername,
         });
 
         if (usernameExists) {
-
             return res.status(400).json({
-
                 success: false,
-                message: "Username already exists."
-
+                message: 'Username already exists.',
             });
-
         }
 
         const emailExists = await Player.findOne({
-
-            email: normalizedEmail
-
+            email: normalizedEmail,
         });
 
         if (emailExists) {
-
             return res.status(400).json({
-
                 success: false,
-                message: "Email already registered."
-
+                message: 'Email already registered.',
             });
-
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const totalPlayers = await Player.countDocuments();
 
-        const nexaId = "NC" + (100001 + totalPlayers);
+        const nexaId = `NC${100001 + totalPlayers}`;
 
         const player = new Player({
             nexaId,
@@ -114,7 +92,7 @@ router.post("/register", async (req, res) => {
 
         res.status(201).json({
             success: true,
-            message: "Account created successfully.",
+            message: 'Account created successfully.',
             token,
             user: {
                 username: player.username,
@@ -127,19 +105,14 @@ router.post("/register", async (req, res) => {
             },
         });
     } catch (err) {
-
         console.error(err);
 
         res.status(500).json({
-
             success: false,
 
-            message: "Server Error."
-
+            message: 'Server Error.',
         });
-
     }
-
 });
 
 /*
@@ -149,33 +122,33 @@ POST /api/auth/login
 =========================================
 */
 
-router.post("/login", async (req, res) => {
-
+router.post('/login', async (req, res) => {
     try {
-
         const { email, password } = req.body;
-        const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+        const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : '';
 
         if (!normalizedEmail || !password) {
             return res.status(400).json({
                 success: false,
-                message: "Email and password are required."
+                message: 'Email and password are required.',
             });
         }
 
         if (!mongoose.connection || mongoose.connection.readyState !== 1) {
             return res.status(503).json({
                 success: false,
-                message: "Database unavailable. Please try again later."
+                message: 'Database unavailable. Please try again later.',
             });
         }
 
-        const player = await Player.findOne({ email: normalizedEmail });
+        // Password has select:false in the schema — must opt in explicitly,
+        // otherwise player.password is undefined and bcrypt.compare throws.
+        const player = await Player.findOne({ email: normalizedEmail }).select('+password');
 
         if (!player) {
             return res.status(400).json({
                 success: false,
-                message: "Invalid email or password."
+                message: 'Invalid email or password.',
             });
         }
 
@@ -184,7 +157,7 @@ router.post("/login", async (req, res) => {
         if (!validPassword) {
             return res.status(400).json({
                 success: false,
-                message: "Invalid email or password."
+                message: 'Invalid email or password.',
             });
         }
 
@@ -201,20 +174,16 @@ router.post("/login", async (req, res) => {
                 coins: player.coins,
                 xp: player.xp,
                 level: player.level,
-            }
+            },
         });
-
     } catch (err) {
-
         console.error(err);
 
         res.status(500).json({
             success: false,
-            message: "Server Error."
+            message: 'Server Error.',
         });
-
     }
-
 });
 
 module.exports = router;
