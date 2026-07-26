@@ -308,7 +308,7 @@ body {
   display: none;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
   animation: fadeIn 0.3s ease;
   margin-inline: auto; /* centers under display:block #app too */
 }
@@ -326,7 +326,7 @@ body {
   height: var(--screen-h);
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 4px 4px 12px; /* room so hover lifts/glows don't clip at edges */
+  padding: 0 4px 8px; /* room so hover lifts/glows don't clip at edges */
   flex-shrink: 0;
 }
 

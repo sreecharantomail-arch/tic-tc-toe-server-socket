@@ -70,10 +70,14 @@
    ============================================================================= */
 
 .mode-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+
+    gap: 24px;
+
+    width: min(760px, 100%);
+
+    margin: 20px auto 0;
 }
 
 /* Variants only set the accent custom properties below;
@@ -81,16 +85,25 @@
 .mode-card {
   background: var(--card);
   border: 1.5px solid var(--mc-border, var(--bd));
-  border-radius: 14px;
-  padding: 16px 10px;
+  border-radius: 16px;
+
+  min-height: 180px;      /* NEW */
+  padding: 24px 18px;     /* Increased */
+
+  display: flex;          /* NEW */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
   text-align: center;
   cursor: pointer;
-  transition:
-    border-color .22s,
-    box-shadow .22s,
-    transform .22s;
   position: relative;
   overflow: hidden;
+
+  transition:
+      border-color .25s,
+      box-shadow .25s,
+      transform .25s;
 }
 
 .mode-card::before {
@@ -113,21 +126,20 @@
 }
 
 .mode-card .icon {
-  font-size: 1.8rem;
-  margin-bottom: 7px;
+    font-size: 2.8rem;
+    margin-bottom: 14px;
 }
 
 .mode-card .label {
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: var(--mc-accent);
+    font-size: 1.15rem;
+    font-weight: 800;
+    margin-bottom: 8px;
 }
 
 .mode-card .desc {
-  font-size: 0.65rem;
-  color: var(--text3);
-  margin-top: 3px;
+    font-size: .82rem;
+    line-height: 1.5;
+    opacity: .85;
 }
 
 /* Accent variants — resting border is the accent at ~20% alpha */
