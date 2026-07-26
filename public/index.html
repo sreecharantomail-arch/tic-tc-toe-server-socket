@@ -313,32 +313,42 @@
     <!-- ── GAME ───────────────────────────────────────────────── -->
     <section class="screen" id="sGame" aria-label="Game board">
 
-      <!-- Score bar -->
-      <div class="top-bar" role="group" aria-label="Scores">
-        <div class="player-card xc" id="cX">
-          <div class="player-avatar" id="avX">🎮</div>
-          <div class="player-name" id="nX">X</div>
-          <div class="player-score" id="scX">0</div>
-        </div>
-        <span class="vs-label" aria-hidden="true">VS</span>
-        <div class="timer-wrap" role="timer" aria-label="Turn timer">
-          <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true">
-            <circle class="timer-track" cx="24" cy="24" r="20" />
-            <circle class="timer-arc" id="tarc" cx="24" cy="24" r="20" />
-          </svg>
-          <div class="timer-number" id="tnum">15</div>
-        </div>
-        <span class="vs-label" aria-hidden="true">VS</span>
-        <div class="player-card oc" id="cO">
-          <div class="player-avatar" id="avO">🤖</div>
-          <div class="player-name" id="nO">O</div>
-          <div class="player-score" id="scO">0</div>
-        </div>
-      </div>
+      <!-- Match Header -->
+<div class="game-header-row">
 
-      <div class="status-bar" role="status" aria-live="polite">
-        <span id="gst" class="sx">X's Turn</span>
-      </div>
+    <div class="player-card xc" id="cX">
+        <div class="player-avatar" id="avX">🎮</div>
+        <div class="player-name" id="nX">Player 1</div>
+        <div class="player-score" id="scX">0</div>
+    </div>
+
+    <div class="match-center">
+
+        <div class="timer-wrap" role="timer" aria-label="Turn timer">
+            <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true">
+                <circle class="timer-track" cx="24" cy="24" r="20"></circle>
+                <circle class="timer-arc" id="tarc" cx="24" cy="24" r="20"></circle>
+            </svg>
+            <div class="timer-number" id="tnum">15</div>
+        </div>
+
+        <div class="vs-badge">
+            VS
+        </div>
+
+    </div>
+
+    <div class="player-card oc" id="cO">
+        <div class="player-avatar" id="avO">🤖</div>
+        <div class="player-name" id="nO">Player 2</div>
+        <div class="player-score" id="scO">0</div>
+    </div>
+
+</div>
+
+<div class="status-bar" role="status" aria-live="polite">
+    <span id="gst" class="sx">X's Turn</span>
+</div>
 
       <!-- Board -->
       <div class="board-wrap" id="bwrap">
