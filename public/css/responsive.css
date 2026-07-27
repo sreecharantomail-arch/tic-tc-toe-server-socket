@@ -204,3 +204,40 @@
         padding: 16px 8px;
     }
 }
+
+/* Keep the match screen identical in every mode and at every width. These
+   rules intentionally replace the former desktop-only arena split. */
+@media (min-width: 900px) {
+    #sGame.active {
+        display: flex;
+        max-width: 520px;
+    }
+
+    #sGame .board-wrap {
+        width: min(296px, 88vw);
+    }
+
+    #sGame .chat-box {
+        display: block;
+        min-height: 0;
+        height: auto;
+    }
+
+    #sGame .chat-messages {
+        height: 80px;
+        min-height: 0;
+    }
+
+    #sGame .session-lb {
+        min-height: 0;
+        overflow-y: visible;
+    }
+}
+
+/* Preserve the complete game HUD above the fixed navigation on short
+   desktop windows without changing the layout sequence. */
+@media (min-width: 900px) and (max-height: 820px) {
+    #sGame .board-wrap {
+        width: 240px;
+    }
+}

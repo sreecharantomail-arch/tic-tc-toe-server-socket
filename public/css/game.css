@@ -4,12 +4,46 @@
 
 /* ----- Score bar ----- */
 
-.top-bar {
+.top-bar,
+.game-header-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
   gap: 6px;
+}
+
+/* The same focused match HUD is used by every game mode. */
+#sGame > .game-header-row {
+  order: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 58px minmax(0, 1fr);
+  align-items: stretch;
+  gap: 9px;
+  max-width: 520px;
+}
+
+#sGame > .status-bar { order: 2; }
+#sGame > .board-wrap { order: 3; }
+#sGame > .mode-pill { order: 4; }
+#sGame > .emoji-bar { order: 5; }
+#sGame > .action-row { order: 6; }
+#sGame > .session-lb { order: 7; }
+#sGame > .chat-box { order: 8; }
+
+.match-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+
+.vs-badge {
+  color: var(--text3);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
 }
 
 .player-card {
@@ -66,6 +100,15 @@
 
 .player-card.oc .player-score {
   color: var(--o);
+}
+
+.game-header-row .player-card {
+  min-height: 66px;
+  padding: 7px 9px;
+}
+
+.game-header-row .player-avatar {
+  font-size: 1.35rem;
 }
 
 .vs-label {
@@ -131,8 +174,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 28px;
-  font-size: 0.85rem;
+  min-height: 20px;
+  font-size: 0.76rem;
 }
 
 .sx {
@@ -293,6 +336,7 @@
   display: flex;
   justify-content: center;
   gap: 8px;
+  width: 100%;
 }
 
 .emoji-btn {
@@ -420,13 +464,18 @@
 
 .session-lb {
   width: 100%;
+  max-width: 520px;
+  background: var(--card);
+  border: 1.5px solid var(--bd);
+  border-radius: 12px;
+  padding: 7px 10px;
 }
 
 .session-lb-header {
   display: flex;
   padding: 4px 0;
   border-bottom: 1px solid var(--bd);
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .session-lb-header span {
@@ -479,16 +528,18 @@
   display: flex;
   justify-content: center;
   width: 100%;
+  max-width: 520px;
   gap: 12px;
 }
 
 .mode-pill {
-  font-size: 0.6rem;
+  font-size: 0.64rem;
   letter-spacing: 0.12em;
-  padding: 3px 10px;
+  padding: 5px 12px;
   border-radius: 20px;
   border: 1px solid var(--bd);
   color: var(--text3);
+  background: var(--card2);
   text-transform: uppercase;
   text-align: center;
 }
