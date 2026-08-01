@@ -205,6 +205,17 @@
     }
 }
 
+/* The match HUD replaces launcher chrome while a game is open, so the board
+   is the first thing players see at every screen size. */
+#app:has(#sGame.active) #game-header,
+#app:has(#sGame.active) #player-hud {
+    display: none;
+}
+
+#app:has(#sGame.active) {
+    --screen-h: calc(var(--vh100) - var(--shell-pt) - var(--nav-h) - 12px);
+}
+
 /* Keep the match screen identical in every mode and at every width. These
    rules intentionally replace the former desktop-only arena split. */
 @media (min-width: 900px) {

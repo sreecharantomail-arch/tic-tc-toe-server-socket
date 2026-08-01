@@ -2,95 +2,113 @@
    GAME SCREEN
    ============================================================================= */
 
-/* ----- Score bar ----- */
+/* ----- Match shell ----- */
 
-.top-bar,
-.game-header-row {
+#sGame.active {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  gap: 6px;
+  justify-content: center;
+  padding-bottom: 24px;
 }
 
-/* The same focused match HUD is used by every game mode. */
-#sGame > .game-header-row {
-  order: 1;
+.game-shell {
+  width: min(100%, 920px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.match-header {
+  width: min(100%, 760px);
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 58px minmax(0, 1fr);
-  align-items: stretch;
-  gap: 9px;
-  max-width: 520px;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(10px, 2vw, 24px);
 }
-
-#sGame > .status-bar { order: 2; }
-#sGame > .board-wrap { order: 3; }
-#sGame > .mode-pill { order: 4; }
-#sGame > .emoji-bar { order: 5; }
-#sGame > .action-row { order: 6; }
-#sGame > .session-lb { order: 7; }
-#sGame > .chat-box { order: 8; }
 
 .match-center {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
+  gap: 8px;
+  min-width: 92px;
 }
 
 .vs-badge {
-  color: var(--text3);
-  font-size: 0.62rem;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+  color: var(--text);
+  font-size: 0.78rem;
   font-weight: 800;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
 }
 
 .player-card {
-  flex: 1;
-  background: var(--card);
-  border-radius: 12px;
-  border: 1.5px solid var(--bd);
-  padding: 8px 10px;
+  min-width: 0;
+  background: linear-gradient(145deg, rgba(16, 23, 36, 0.92), rgba(8, 12, 22, 0.9));
+  border-radius: 20px;
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  padding: 14px 16px;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: border-color 0.3s,
-    box-shadow 0.3s,
-    transform 0.2s;
-  min-width: 0;
-  position: relative;
+  gap: 5px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
-.player-card.ax {
-  border-color: var(--x);
-  box-shadow: 0 0 16px var(--glow-x);
+.player-card.xc {
+  border-color: rgba(113, 231, 255, 0.55);
+  box-shadow: 0 0 0 1px rgba(113, 231, 255, 0.18), 0 16px 42px rgba(0, 0, 0, 0.28);
 }
 
-.player-card.ao {
-  border-color: var(--o);
-  box-shadow: 0 0 16px var(--glow-o);
+.player-card.oc {
+  border-color: rgba(255, 122, 122, 0.5);
+  box-shadow: 0 0 0 1px rgba(255, 122, 122, 0.16), 0 16px 42px rgba(0, 0, 0, 0.28);
+}
+
+.player-card:hover {
+  transform: translateY(-2px);
 }
 
 .player-card .player-avatar {
-  font-size: 1.2rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 1.35rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   line-height: 1;
 }
 
 .player-card .player-name {
-  font-size: 0.65rem;
-  color: var(--text3);
+  font-size: 0.72rem;
+  color: var(--text2);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin: 1px 0;
   width: 100%;
+  font-weight: 700;
+  letter-spacing: 0.04em;
 }
 
 .player-card .player-score {
-  font-size: 1.3rem;
+  font-size: 1.15rem;
   font-weight: 800;
 }
 
@@ -100,15 +118,6 @@
 
 .player-card.oc .player-score {
   color: var(--o);
-}
-
-.game-header-row .player-card {
-  min-height: 66px;
-  padding: 7px 9px;
-}
-
-.game-header-row .player-avatar {
-  font-size: 1.35rem;
 }
 
 .vs-label {
@@ -122,19 +131,27 @@
 
 .timer-wrap {
   position: relative;
-  width: 48px;
-  height: 48px;
+  width: 74px;
+  height: 74px;
   flex-shrink: 0;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(8, 12, 22, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
 }
 
 .timer-wrap svg {
   display: block;
+  width: 74px;
+  height: 74px;
   transform: rotate(-90deg);
 }
 
 .timer-track {
   fill: none;
-  stroke: var(--bd);
+  stroke: rgba(255, 255, 255, 0.12);
   stroke-width: 3.5;
 }
 
@@ -163,7 +180,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   font-weight: 800;
   color: var(--win);
 }
@@ -174,8 +191,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 20px;
-  font-size: 0.76rem;
+  min-height: 34px;
+  padding: 6px 14px;
+  font-size: 0.74rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(11, 18, 31, 0.72);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
 }
 
 .sx {
@@ -208,17 +233,34 @@
 
 /* ----- Board ----- */
 
+.board-stage {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
 .board-wrap {
   position: relative;
-  width: min(296px, 88vw);
+  width: min(100%, 460px);
+  max-width: 460px;
   aspect-ratio: 1;
+  padding: 14px;
+  border-radius: 28px;
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(145deg, rgba(12, 18, 30, 0.95), rgba(7, 12, 22, 0.9));
+  box-shadow: 0 22px 44px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 }
 
 .board {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  gap: 12px;
   width: 100%;
+  height: 100%;
 }
 
 .cell {
@@ -330,31 +372,72 @@
   will-change: stroke-dashoffset;
 }
 
-/* ----- Emoji reactions ----- */
+/* ----- Game mode / reactions / actions ----- */
+
+.mode-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--text2);
+  background: rgba(10, 15, 26, 0.74);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 700;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
+}
 
 .emoji-bar {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   justify-content: center;
   gap: 8px;
-  width: 100%;
+  width: min(100%, 440px);
 }
 
 .emoji-btn {
-  background: var(--card);
-  border: 1.5px solid var(--bd);
-  border-radius: 10px;
-  padding: 5px 8px;
+  background: linear-gradient(145deg, rgba(16, 23, 38, 0.92), rgba(9, 14, 24, 0.9));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 8px 10px;
   font-size: 0.95rem;
   cursor: pointer;
-  transition:
-    transform .15s,
-    border-color .15s,
-    background .15s;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
 }
 
 .emoji-btn:hover {
-  transform: scale(1.25);
+  transform: translateY(-2px) scale(1.04);
   border-color: var(--x);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.22);
+}
+
+.action-row,
+.secondary-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  width: min(100%, 440px);
+}
+
+.action-btn,
+.secondary-actions .btn-ghost {
+  flex: 1 1 0;
+  min-width: 0;
+  border-radius: 16px;
+  padding: 10px 12px;
+  font-weight: 700;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.action-btn:hover,
+.secondary-actions .btn-ghost:hover {
+  transform: translateY(-2px);
 }
 
 .emoji-floater {
@@ -382,10 +465,13 @@
 
 .chat-box {
   width: 100%;
-  background: var(--card);
-  border: 1.5px solid var(--bd);
-  border-radius: 14px;
+  background: linear-gradient(145deg, rgba(16, 23, 38, 0.9), rgba(9, 14, 24, 0.86));
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
   overflow: hidden;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 .chat-messages {
@@ -465,10 +551,13 @@
 .session-lb {
   width: 100%;
   max-width: 520px;
-  background: var(--card);
-  border: 1.5px solid var(--bd);
-  border-radius: 12px;
-  padding: 7px 10px;
+  background: linear-gradient(145deg, rgba(16, 23, 38, 0.9), rgba(9, 14, 24, 0.86));
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: 10px 12px;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 .session-lb-header {
@@ -522,24 +611,112 @@
   text-align: right;
 }
 
-/* ----- Game action row ----- */
+/* ----- Match controls and stats ----- */
 
-.action-row {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  max-width: 520px;
+.game-footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+  width: min(100%, 860px);
   gap: 12px;
 }
 
 .mode-pill {
   font-size: 0.64rem;
   letter-spacing: 0.12em;
-  padding: 5px 12px;
-  border-radius: 20px;
-  border: 1px solid var(--bd);
-  color: var(--text3);
-  background: var(--card2);
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--text2);
+  background: rgba(10, 15, 26, 0.74);
   text-transform: uppercase;
   text-align: center;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
+}
+
+@media (max-width: 1024px) {
+  .board-wrap {
+    width: min(100%, 420px);
+    max-width: 420px;
+  }
+}
+
+@media (max-width: 768px) {
+  .match-header {
+    gap: 10px;
+  }
+
+  .player-card {
+    padding: 12px 12px;
+  }
+
+  .timer-wrap,
+  .timer-wrap svg {
+    width: 66px;
+    height: 66px;
+  }
+
+  .board-wrap {
+    width: min(100%, 360px);
+    max-width: 360px;
+    padding: 12px;
+  }
+
+  .game-footer {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .game-shell {
+    gap: 12px;
+  }
+
+  .match-header {
+    gap: 8px;
+  }
+
+  .player-card .player-avatar {
+    width: 42px;
+    height: 42px;
+    font-size: 1.15rem;
+  }
+
+  .player-card .player-name {
+    font-size: 0.64rem;
+  }
+
+  .vs-badge {
+    width: 48px;
+    height: 48px;
+    font-size: 0.7rem;
+  }
+
+  .board-wrap {
+    width: min(100%, 320px);
+    max-width: 320px;
+    padding: 10px;
+  }
+
+  .action-row,
+  .secondary-actions {
+    width: min(100%, 360px);
+  }
+}
+
+@media (max-width: 480px) {
+  .board-wrap {
+    width: min(100%, 292px);
+    max-width: 292px;
+  }
+
+  .emoji-bar {
+    width: 100%;
+    gap: 6px;
+  }
+
+  .emoji-btn {
+    min-height: 40px;
+    padding: 6px 8px;
+  }
 }
