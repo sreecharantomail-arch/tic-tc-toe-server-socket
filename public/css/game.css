@@ -6,11 +6,13 @@
 
 #sGame.active {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding-bottom: 24px;
+  justify-content: flex-start;
+  padding-top: 12px;
+  padding-bottom: 12px;
   overflow-y: auto;
-  max-height: 100vh;
+  overflow-x: hidden;
 }
 
 .game-shell {
@@ -19,6 +21,7 @@
   flex-direction: column;
   align-items: center;
   gap: 18px;
+  flex-shrink: 0;
 }
 
 .match-header {
